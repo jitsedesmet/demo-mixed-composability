@@ -5,11 +5,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="7a23a544-5f22-4357-a3da-153e04a428a8" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/lib/components/Yasge.svelte" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/lib/helpers.svelte.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/routes/+page.svelte" beforeDir="false" afterPath="$PROJECT_DIR$/src/routes/+page.svelte" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/yarn.lock" beforeDir="false" afterPath="$PROJECT_DIR$/yarn.lock" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -231,7 +229,7 @@
       <workItem from="1751205454516" duration="233000" />
       <workItem from="1751205701146" duration="8000" />
       <workItem from="1771602600839" duration="14000" />
-      <workItem from="1771603461403" duration="2324000" />
+      <workItem from="1771603461403" duration="3172000" />
     </task>
     <servers />
   </component>
