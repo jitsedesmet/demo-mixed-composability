@@ -217,6 +217,7 @@
 
   /* ---- Config sections ---- */
   .config-section {
+    flex: 1;
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
@@ -224,6 +225,7 @@
     border-radius: 8px;
     padding: 0.75rem;
     background: #fafbfc;
+    overflow: hidden;
   }
 
   /* ---- Query / Results sections ---- */

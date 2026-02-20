@@ -40,6 +40,9 @@
 
 <style>
   .tab-panel {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
     border: 1px solid #ccc;
     border-radius: 6px;
     overflow: hidden;
@@ -78,8 +81,9 @@
   }
 
   .tab-content {
+    flex: 1;
     padding: 0.75rem;
     background: #fff;
-    min-height: 6rem;
+    overflow: auto;
   }
 </style>
