@@ -1,14 +1,18 @@
 <script lang="ts">
   import {innerWidth} from 'svelte/reactivity/window';
+  import Yasge from "$lib/components/Yasge.svelte";
 
   let screenWidth = $derived(innerWidth.current ?? 600);
   let smallScreen = $derived<boolean>(screenWidth < 550);
+  let query = $state<string | undefined>();
 </script>
 
 
 <div class="header">
     <a href="/" class="no-style"><h1>SPARQL Engine & Parser composability</h1></a>
 </div>
+
+<Yasge query={query} />
 
 
 <footer>
