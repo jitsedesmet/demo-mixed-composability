@@ -8,9 +8,13 @@
 
   interface Props {
     query: string | undefined;
+    bindings?: Bindings[];
+    queryDone?: boolean;
   }
   let {
     query = $bindable(),
+    bindings = $bindable<Bindings[]>([]),
+    queryDone = $bindable(false),
   }: Props = $props();
   let error = $state<string | undefined>(undefined);
   const engine = new QueryEngine();
@@ -31,18 +35,20 @@
       query = yasqe.getValue() as string;
       error = undefined;
       try {
-        // TODO: clear visualized results
+        bindings = [];
+        queryDone = false;
         const bindingStream = await engine.queryBindings(query, {
           sources: ["https://fragments.dbpedia.org/2016-04/en"]
         });
         bindingStream.on('data', (binding: Bindings) => {
-          // TODO: Add binding to visualized results (results should be visualized as they come in)
+          bindings.push(binding);
         });
-        bindingStream.on('error', (error: Error) => {
-          // TODO: communicate to the use that an error has occurred
+        bindingStream.on('error', (err: Error) => {
+          error = err.message;
+          console.error(err);
         });
         bindingStream.on('end', () => {
-          // TODO: handle the fact that the query is done.
+          queryDone = true;
         })
       } catch (err: unknown) {
         error = (err as Error).message;

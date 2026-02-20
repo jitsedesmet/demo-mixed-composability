@@ -2,6 +2,8 @@
   import Yasge from "$lib/components/Yasge.svelte";
   import ToggleGroup from "$lib/components/ToggleGroup.svelte";
   import TabPanel from "$lib/components/TabPanel.svelte";
+  import QueryResults from "$lib/components/QueryResults.svelte";
+  import type {Bindings} from "@rdfjs/types";
 
   // Parser composition toggles
   const compositionOptions = ['SPARQL 1.2', 'Built-in Adjust', 'Lateral operation'];
@@ -21,18 +23,8 @@
 
   // Query & results
   let query = $state<string | undefined>();
-
-  interface Binding {
-    variable: string;
-    value: string;
-  }
-
-  interface BindingGroup {
-    bindings: Binding[];
-  }
-
-  // Placeholder result rows — will be populated by real query execution later
-  const resultGroups: BindingGroup[] = [];
+  let bindings = $state<Bindings[]>([]);
+  let queryDone = $state(false);
 </script>
 
 <div class="page">
@@ -113,35 +105,12 @@
     <div class="right-panel">
       <section class="query-section">
         <h2>Query</h2>
-        <Yasge bind:query />
+        <Yasge bind:query bind:bindings bind:queryDone />
       </section>
 
       <section class="results-section">
         <h2>Results</h2>
-        {#if resultGroups.length === 0}
-          <p class="placeholder">No results yet. Execute a query to see results here.</p>
-        {:else}
-          {#each resultGroups as group, i}
-            <div class="result-group" aria-label="Result binding {i + 1}">
-              <table class="result-table">
-                <thead>
-                  <tr>
-                    <th>Variable</th>
-                    <th>Value</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {#each group.bindings as binding}
-                    <tr>
-                      <td>{binding.variable}</td>
-                      <td>{binding.value}</td>
-                    </tr>
-                  {/each}
-                </tbody>
-              </table>
-            </div>
-          {/each}
-        {/if}
+        <QueryResults {bindings} {queryDone} />
       </section>
     </div>
   </main>
@@ -235,36 +204,6 @@
     border-radius: 8px;
     padding: 0.75rem;
     background: #fafbfc;
-  }
-
-  /* ---- Result table ---- */
-  .result-group {
-    border: 2px solid #2194f3;
-    border-radius: 6px;
-    margin-bottom: 0.75rem;
-    overflow: hidden;
-  }
-
-  .result-table {
-    width: 100%;
-    border-collapse: collapse;
-    font-size: 0.88em;
-  }
-
-  .result-table th,
-  .result-table td {
-    text-align: left;
-    padding: 5px 10px;
-    border-bottom: 1px solid #e1e4e8;
-  }
-
-  .result-table th {
-    background: #f6f8fa;
-    font-weight: 600;
-  }
-
-  .result-table tr:last-child td {
-    border-bottom: none;
   }
 
   /* ---- Placeholder text ---- */
