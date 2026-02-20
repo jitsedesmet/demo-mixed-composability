@@ -4,6 +4,7 @@
   import Yasqe from "@triply/yasqe";
   import {QueryEngine} from "@comunica/query-sparql-file";
   import type {ActionReturn} from "svelte/action";
+  import type {Bindings} from "@rdfjs/types";
 
   interface Props {
     query: string | undefined;
@@ -30,9 +31,19 @@
       query = yasqe.getValue() as string;
       error = undefined;
       try {
-        await engine.query(query, {
+        // TODO: clear visualized results
+        const bindingStream = await engine.queryBindings(query, {
           sources: ["https://fragments.dbpedia.org/2016-04/en"]
         });
+        bindingStream.on('data', (binding: Bindings) => {
+          // TODO: Add binding to visualized results (results should be visualized as they come in)
+        });
+        bindingStream.on('error', (error: Error) => {
+          // TODO: communicate to the use that an error has occurred
+        });
+        bindingStream.on('end', () => {
+          // TODO: handle the fact that the query is done.
+        })
       } catch (err: unknown) {
         error = (err as Error).message;
         console.error(err);
