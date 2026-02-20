@@ -5,8 +5,14 @@
 
   // Parser composition toggles
   const compositionOptions = ['SPARQL 1.2', 'Built-in Adjust', 'Lateral operation'];
-  let parserComposition = $state(compositionOptions[0]);
-  let engineComposition = $state(compositionOptions[0]);
+  let parserComposition = $state(new Set<string>([compositionOptions[0]]));
+  let engineComposition = $state(new Set<string>([compositionOptions[0]]));
+
+  function toggleOption(current: Set<string>, opt: string): Set<string> {
+    const next = new Set(current);
+    if (next.has(opt)) next.delete(opt); else next.add(opt);
+    return next;
+  }
 
   // Parser tabs
   let parserActiveTab = $state('parser');
@@ -44,7 +50,7 @@
           label="Parser:"
           options={compositionOptions}
           selected={parserComposition}
-          onselect={(opt) => (parserComposition = opt)}
+          ontoggle={(opt) => (parserComposition = toggleOption(parserComposition, opt))}
         />
 
         <TabPanel
@@ -57,7 +63,7 @@
         />
 
         {#snippet parserContent()}
-          <p class="placeholder">Parser configuration for <strong>{parserComposition}</strong>.</p>
+          <p class="placeholder">Parser configuration for <strong>{[...parserComposition].join(', ') || 'none'}</strong>.</p>
           <ul class="config-list">
             <li>Builder()</li>
             <li>&nbsp;&nbsp;· ReplaceRule()</li>
@@ -65,10 +71,10 @@
           </ul>
         {/snippet}
         {#snippet generatorContent()}
-          <p class="placeholder">Generator configuration for <strong>{parserComposition}</strong>.</p>
+          <p class="placeholder">Generator configuration for <strong>{[...parserComposition].join(', ') || 'none'}</strong>.</p>
         {/snippet}
         {#snippet transformerContent()}
-          <p class="placeholder">Transformer configuration for <strong>{parserComposition}</strong>.</p>
+          <p class="placeholder">Transformer configuration for <strong>{[...parserComposition].join(', ') || 'none'}</strong>.</p>
         {/snippet}
       </section>
 
@@ -78,7 +84,7 @@
           label="Engine:"
           options={compositionOptions}
           selected={engineComposition}
-          onselect={(opt) => (engineComposition = opt)}
+          ontoggle={(opt) => (engineComposition = toggleOption(engineComposition, opt))}
         />
 
         <TabPanel
@@ -91,7 +97,7 @@
         />
 
         {#snippet config1Content()}
-          <p class="placeholder">Components in file — <strong>{engineComposition}</strong>.</p>
+          <p class="placeholder">Components in file — <strong>{[...engineComposition].join(', ') || 'none'}</strong>.</p>
         {/snippet}
         {#snippet config2Content()}
           <p class="placeholder">Config File 2 contents.</p>
@@ -191,7 +197,7 @@
     display: flex;
     flex: 1;
     gap: 1.25rem;
-    align-items: flex-start;
+    align-items: stretch;
   }
 
   .left-panel {

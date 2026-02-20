@@ -2,11 +2,11 @@
   interface Props {
     label: string;
     options: string[];
-    selected: string;
-    onselect: (option: string) => void;
+    selected: Set<string>;
+    ontoggle: (option: string) => void;
   }
 
-  let { label, options, selected, onselect }: Props = $props();
+  let { label, options, selected, ontoggle }: Props = $props();
 </script>
 
 <div class="toggle-group">
@@ -14,9 +14,10 @@
   <div class="buttons">
     {#each options as option}
       <button
-        class:active={selected === option}
-        onclick={() => onselect(option)}
+        class:active={selected.has(option)}
+        onclick={() => ontoggle(option)}
         type="button"
+        aria-pressed={selected.has(option)}
       >
         {option}
       </button>
