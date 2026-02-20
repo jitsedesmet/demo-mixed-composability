@@ -1,0 +1,32 @@
+services:
+  solidbench:
+    image: ghcr.io/jitsedesmet/solidbench-sgv:latest
+    build:
+      context: .
+      dockerfile: database.dockerfile
+      network: host
+#      args:
+#        BASE_URL_REPLACE: https:\/\/sgf.demo.jitsedesmet.be\/css
+#        BASE_ESCAPED_URL_REPLACE: https%3A%2F%2Fsgf.demo.jitsedesmet.be%2Fcss
+#        BASE_CSS_FILE_LOCATION: "https/sgf.demo.jitsedesmet.be/css/"
+    ports:
+      - "3000:3000"
+    healthcheck:
+      test: ["CMD", "curl", "--fail", "http://localhost:3000/"]
+      interval: 1m30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+#    command: ["-r", "out-fragments/https/sgf.demo.jitsedesmet.be/css/"]
+
+  webapp:
+    image: ghcr.io/jitsedesmet/sgv-web-app:latest
+    build:
+      context: .
+      dockerfile: webapp.dockerfile
+      network: host
+#      args:
+#        BASE_URL_REPLACE: https:\/\/sgf.demo.jitsedesmet.be\/css
+    ports:
+      - "3001:3000"
+# Run docker compose rm -f to remove anonymous volumes attached to containers

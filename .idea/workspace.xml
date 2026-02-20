@@ -1,0 +1,307 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="7a23a544-5f22-4357-a3da-153e04a428a8" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/.github/workflows/build-and-push-image.yml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/LNKD.tech Editor.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/copilot.data.migration.ask2agent.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/sgv-update-engine.iml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/docker-compose.yml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/eslint.config.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/app.d.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/app.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/routes/+layout.svelte" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/routes/+layout.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/routes/+page.svelte" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/static/favicon.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/static/favicon.svg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/svelte.config.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/tsconfig.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/vite.config.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/yarn.lock" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="CopilotPersistence">
+    <persistenceIdMap>
+      <entry key="_/home/jitsedesmet/Documents/PhD/2026/demo-mixed-composability" value="39wO5v3HcbP9EHnIvGRdwvOf5h6" />
+      <entry key="_/home/jitsedesmet/Documents/PhD/code/phd-symosium/sgv-update-engine" value="2sLn1SDxpazOePiDQt280wKqXt9" />
+    </persistenceIdMap>
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Dockerfile" />
+        <option value="yasge" />
+        <option value="TripleBrowser" />
+        <option value="PodSelector" />
+        <option value="DemoGroup" />
+        <option value="breadcrumbs" />
+        <option value="comunicaPath" />
+        <option value="Solid" />
+        <option value="Switch" />
+        <option value="TypeScript File" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="HighlightingSettingsPerFile">
+    <setting file="file://$PROJECT_DIR$/node_modules/@rdfjs/types/data-model.d.ts" root0="SKIP_INSPECTION" />
+    <setting file="file://$PROJECT_DIR$/node_modules/@rdfjs/types/dataset.d.ts" root0="SKIP_INSPECTION" />
+    <setting file="file://$PROJECT_DIR$/node_modules/@rdfjs/types/index.d.ts" root0="SKIP_INSPECTION" />
+    <setting file="file://$PROJECT_DIR$/node_modules/@rdfjs/types/package.json" root0="SKIP_INSPECTION" />
+    <setting file="file://$PROJECT_DIR$/node_modules/@rdfjs/types/query.d.ts" root0="SKIP_INSPECTION" />
+    <setting file="file://$PROJECT_DIR$/node_modules/@triply/yasqe/src/index.ts" root0="SKIP_INSPECTION" />
+    <setting file="file://$PROJECT_DIR$/node_modules/@types/sparqljs/index.d.ts" root0="SKIP_INSPECTION" />
+    <setting file="file://$PROJECT_DIR$/node_modules/rdf-stores/lib/RdfStore.d.ts" root0="SKIP_INSPECTION" />
+    <setting file="file://$PROJECT_DIR$/node_modules/svelte-check/dist/src/index.js" root0="SKIP_INSPECTION" />
+    <setting file="file://$PROJECT_DIR$/node_modules/svelte/types/index.d.ts" root0="SKIP_INSPECTION" />
+    <setting file="file://$PROJECT_DIR$/node_modules/typescript/lib/lib.es2015.promise.d.ts" root0="SKIP_INSPECTION" />
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 2
+}</component>
+  <component name="ProjectId" id="2sLn1SDxpazOePiDQt280wKqXt9" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "RunOnceActivity.typescript.service.memoryLimit.init": "true",
+    "git-widget-placeholder": "main",
+    "javascript.preferred.runtime.type.id": "node",
+    "last_opened_file_path": "/home/jitsedesmet/Documents/PhD/2026/demo-mixed-composability",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "yarn",
+    "npm.build.executor": "Run",
+    "npm.build:ts.executor": "Run",
+    "npm.dev.executor": "Run",
+    "npm.start.executor": "Run",
+    "run.code.analysis.last.selected.profile": "pProject Default",
+    "settings.editor.selected.configurable": "preferences.lookFeel",
+    "ts.external.directory.path": "/home/jitsedesmet/Documents/PhD/2026/demo-mixed-composability/node_modules/typescript/lib",
+    "vue.rearranger.settings.migration": "true"
+  }
+}]]></component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$" />
+      <recent name="$PROJECT_DIR$/data" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/src/lib/ui/components/SVG" />
+      <recent name="$PROJECT_DIR$" />
+      <recent name="$PROJECT_DIR$/my-app/src/lib" />
+    </key>
+  </component>
+  <component name="RunManager" selected="npm.build">
+    <configuration name="build" type="js.build_tools.npm" temporary="true" nameIsGenerated="true">
+      <package-json value="$PROJECT_DIR$/package.json" />
+      <command value="run" />
+      <scripts>
+        <script value="build" />
+      </scripts>
+      <node-interpreter value="project" />
+      <envs />
+      <method v="2" />
+    </configuration>
+    <configuration name="build:ts" type="js.build_tools.npm" temporary="true" nameIsGenerated="true">
+      <package-json value="$PROJECT_DIR$/package.json" />
+      <command value="run" />
+      <scripts>
+        <script value="build:ts" />
+      </scripts>
+      <node-interpreter value="project" />
+      <envs />
+      <method v="2" />
+    </configuration>
+    <configuration name="dev" type="js.build_tools.npm" temporary="true" nameIsGenerated="true">
+      <package-json value="$PROJECT_DIR$/package.json" />
+      <command value="run" />
+      <scripts>
+        <script value="dev" />
+      </scripts>
+      <node-interpreter value="project" />
+      <envs />
+      <method v="2" />
+    </configuration>
+    <configuration name="start" type="js.build_tools.npm" temporary="true" nameIsGenerated="true">
+      <package-json value="$PROJECT_DIR$/package.json" />
+      <command value="run" />
+      <scripts>
+        <script value="start" />
+      </scripts>
+      <node-interpreter value="project" />
+      <envs />
+      <method v="2" />
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="npm.build" />
+        <item itemvalue="npm.dev" />
+        <item itemvalue="npm.start" />
+        <item itemvalue="npm.build:ts" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-js-predefined-d6986cc7102b-9b0f141eb926-JavaScript-WS-253.30387.83" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="7a23a544-5f22-4357-a3da-153e04a428a8" name="Changes" comment="" />
+      <created>1738243506627</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1738243506627</updated>
+      <workItem from="1738243507749" duration="6122000" />
+      <workItem from="1738312593705" duration="613000" />
+      <workItem from="1738759436945" duration="6692000" />
+      <workItem from="1738766370888" duration="9642000" />
+      <workItem from="1738830241813" duration="2008000" />
+      <workItem from="1738834656522" duration="25000" />
+      <workItem from="1738841148041" duration="685000" />
+      <workItem from="1739176660069" duration="766000" />
+      <workItem from="1739179132092" duration="3842000" />
+      <workItem from="1739263923431" duration="606000" />
+      <workItem from="1739282254440" duration="672000" />
+      <workItem from="1739351539287" duration="615000" />
+      <workItem from="1739871393983" duration="2680000" />
+      <workItem from="1739884938298" duration="1152000" />
+      <workItem from="1739887887128" duration="7408000" />
+      <workItem from="1739956943995" duration="3001000" />
+      <workItem from="1739960037549" duration="2635000" />
+      <workItem from="1739965836475" duration="6454000" />
+      <workItem from="1739972688413" duration="6269000" />
+      <workItem from="1739983231355" duration="3232000" />
+      <workItem from="1740041889490" duration="8380000" />
+      <workItem from="1740052866136" duration="11564000" />
+      <workItem from="1740079065670" duration="1068000" />
+      <workItem from="1740126427521" duration="13694000" />
+      <workItem from="1740143262875" duration="8167000" />
+      <workItem from="1740386710707" duration="1642000" />
+      <workItem from="1740389214791" duration="2738000" />
+      <workItem from="1740563862350" duration="3949000" />
+      <workItem from="1741170412034" duration="54000" />
+      <workItem from="1741178137339" duration="821000" />
+      <workItem from="1741185330099" duration="918000" />
+      <workItem from="1741267618009" duration="1666000" />
+      <workItem from="1741364214803" duration="2711000" />
+      <workItem from="1741427747561" duration="20000" />
+      <workItem from="1741602912087" duration="4825000" />
+      <workItem from="1741617052630" duration="3000" />
+      <workItem from="1744634883579" duration="1827000" />
+      <workItem from="1744642112865" duration="1083000" />
+      <workItem from="1744643482477" duration="534000" />
+      <workItem from="1744644432220" duration="2537000" />
+      <workItem from="1744701920901" duration="11673000" />
+      <workItem from="1744726179394" duration="2819000" />
+      <workItem from="1744790874378" duration="21000" />
+      <workItem from="1744793045612" duration="1239000" />
+      <workItem from="1744811168171" duration="992000" />
+      <workItem from="1745310689799" duration="5833000" />
+      <workItem from="1745325028424" duration="6114000" />
+      <workItem from="1745396795668" duration="13000" />
+      <workItem from="1745401376051" duration="8982000" />
+      <workItem from="1745416200442" duration="20000" />
+      <workItem from="1745482703424" duration="2731000" />
+      <workItem from="1745485801487" duration="3066000" />
+      <workItem from="1745491248858" duration="1268000" />
+      <workItem from="1745495013481" duration="36000" />
+      <workItem from="1745829595416" duration="388000" />
+      <workItem from="1745830287967" duration="3037000" />
+      <workItem from="1746433269295" duration="325000" />
+      <workItem from="1746455018629" duration="949000" />
+      <workItem from="1746521099049" duration="42000" />
+      <workItem from="1747050958233" duration="26000" />
+      <workItem from="1747059615051" duration="26000" />
+      <workItem from="1747915232989" duration="22000" />
+      <workItem from="1748937157938" duration="1539000" />
+      <workItem from="1751204319146" duration="687000" />
+      <workItem from="1751205454516" duration="233000" />
+      <workItem from="1751205701146" duration="8000" />
+      <workItem from="1771602600839" duration="14000" />
+      <workItem from="1771603461403" duration="480000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="javascript">
+          <url>file://$PROJECT_DIR$/my-app/src/lib/Operations/DeleteInsertOperationHandler.ts</url>
+          <line>84</line>
+          <option name="timeStamp" value="6" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="javascript">
+          <url>file://$PROJECT_DIR$/my-app/src/lib/Operations/OperationParser.ts</url>
+          <line>37</line>
+          <option name="timeStamp" value="7" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="javascript">
+          <url>file://$PROJECT_DIR$/my-app/src/lib/Operations/OperationRemoveHandler.ts</url>
+          <line>28</line>
+          <option name="timeStamp" value="8" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="javascript">
+          <url>file://$PROJECT_DIR$/my-app/src/lib/Operations/EditResourceOperation.ts</url>
+          <line>23</line>
+          <option name="timeStamp" value="9" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="javascript">
+          <url>file://$PROJECT_DIR$/src/lib/index.ts</url>
+          <option name="timeStamp" value="10" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
+  </component>
+  <component name="github-copilot-workspace">
+    <instructionFileLocations>
+      <option value=".github/instructions" />
+    </instructionFileLocations>
+    <promptFileLocations>
+      <option value=".github/prompts" />
+    </promptFileLocations>
+  </component>
+</project>
