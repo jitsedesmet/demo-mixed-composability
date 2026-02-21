@@ -38,8 +38,7 @@
 
   <main class="split-view">
     <!-- ===== LEFT PANEL ===== -->
-    <div class="left-panel" style="height: calc(100vh - {headerHeight}px - {footerHeight}px)">
-
+    <div class="left-panel" style="height: calc(100svh - {headerHeight}px - {footerHeight}px - 8px - 12px)">
       <!-- Parser section -->
       <section class="config-section">
         <ToggleGroup
@@ -102,7 +101,6 @@
           <p class="placeholder">Config File 3 contents.</p>
         {/snippet}
       </section>
-
     </div>
 
     <!-- ===== RIGHT PANEL ===== -->
