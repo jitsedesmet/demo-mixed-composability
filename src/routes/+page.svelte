@@ -138,7 +138,7 @@
   .page {
     display: grid;
     grid-template-rows: auto 1fr auto;
-    min-height: 100vh;
+    height: 100vh;
     box-sizing: border-box;
     padding: 0 1rem 0.5rem;
   }
@@ -174,9 +174,6 @@
     display: flex;
     flex-direction: column;
     gap: 1.25rem;
-    align-self: flex-start;
-    position: sticky;
-    top: 0;
     height: 100%;
   }
 
@@ -185,6 +182,7 @@
     display: flex;
     flex-direction: column;
     gap: 1rem;
+    overflow-y: auto;
   }
 
   /* ---- Config sections ---- */
