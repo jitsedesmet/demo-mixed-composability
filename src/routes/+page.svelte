@@ -25,6 +25,22 @@
   let query = $state<string | undefined>();
   let bindings = $state<Bindings[]>([]);
   let queryDone = $state(false);
+  let queryRunning = $state(false);
+  let queryStartTime = $state(0);
+  let elapsed = $state(0);
+
+  $effect(() => {
+    if (!queryRunning) return;
+    const start = queryStartTime;
+    elapsed = 0;
+    const id = setInterval(() => {
+      elapsed = (Date.now() - start) / 1000;
+    }, 100);
+    return () => {
+      clearInterval(id);
+      elapsed = (Date.now() - start) / 1000;
+    };
+  });
 
   // Layout measurements for left-panel height composition
   let headerHeight = $state(0);
@@ -107,11 +123,16 @@
     <div class="right-panel">
       <section class="query-section">
         <h2>Query</h2>
-        <Yasge bind:query bind:bindings bind:queryDone />
+        <Yasge bind:query bind:bindings bind:queryDone bind:queryRunning bind:queryStartTime />
       </section>
 
       <section class="results-section">
-        <h2>Results</h2>
+        <div class="results-header">
+          <h2>Results</h2>
+          {#if queryRunning || queryDone}
+            <span class="query-timer">{bindings.length} result{bindings.length === 1 ? '' : 's'} in {elapsed.toFixed(1)}s{queryRunning ? '…' : ''}</span>
+          {/if}
+        </div>
         <QueryResults {bindings} {queryDone} />
       </section>
     </div>
@@ -209,6 +230,23 @@
     border-radius: 8px;
     padding: 0.75rem;
     background: #fafbfc;
+  }
+
+  .results-header {
+    display: flex;
+    align-items: baseline;
+    margin-bottom: 0.4rem;
+  }
+
+  .results-header h2 {
+    margin: 0;
+    flex: 1;
+  }
+
+  .query-timer {
+    font-size: 0.88em;
+    color: #555;
+    white-space: nowrap;
   }
 
   /* ---- Placeholder text ---- */

@@ -10,11 +10,15 @@
     query: string | undefined;
     bindings?: Bindings[];
     queryDone?: boolean;
+    queryRunning?: boolean;
+    queryStartTime?: number;
   }
   let {
     query = $bindable(),
     bindings = $bindable<Bindings[]>([]),
     queryDone = $bindable(false),
+    queryRunning = $bindable(false),
+    queryStartTime = $bindable(0),
   }: Props = $props();
   let error = $state<string | undefined>(undefined);
   const engine = new QueryEngine();
@@ -37,6 +41,8 @@
       try {
         bindings = [];
         queryDone = false;
+        queryRunning = true;
+        queryStartTime = Date.now();
         const bindingStream = await engine.queryBindings(query, {
           sources: ["https://fragments.dbpedia.org/2016-04/en"]
         });
@@ -45,13 +51,16 @@
         });
         bindingStream.on('error', (err: Error) => {
           error = err.message;
+          queryRunning = false;
           console.error(err);
         });
         bindingStream.on('end', () => {
           queryDone = true;
+          queryRunning = false;
         })
       } catch (err: unknown) {
         error = (err as Error).message;
+        queryRunning = false;
         console.error(err);
       }
     });
