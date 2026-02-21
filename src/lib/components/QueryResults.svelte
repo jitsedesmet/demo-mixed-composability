@@ -9,7 +9,6 @@
 </script>
 
 {#if bindings.length > 0 || queryDone}
-  <p class="results-label">Query results:</p>
   {#if bindings.length === 0}
     <p class="no-results">Query returned no results.</p>
   {:else}
@@ -31,13 +30,6 @@
 {/if}
 
 <style>
-  .results-label {
-    color: #b71c1c;
-    font-weight: 700;
-    margin: 0 0 0.5rem 0;
-    font-size: 1rem;
-  }
-
   .no-results {
     color: #555;
     font-size: 0.88em;
@@ -63,7 +55,7 @@
   }
 
   .var-badge {
-    background: #7b1515;
+    background: #4a6081;
     color: #fff;
     font-weight: 700;
     font-size: 0.82em;

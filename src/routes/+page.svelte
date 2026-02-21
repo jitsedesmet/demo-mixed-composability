@@ -175,6 +175,9 @@
     display: flex;
     flex-direction: column;
     gap: 1.25rem;
+    align-self: flex-start;
+    position: sticky;
+    top: 0;
   }
 
   .right-panel {
