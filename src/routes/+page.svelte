@@ -178,6 +178,7 @@
     align-self: flex-start;
     position: sticky;
     top: 0;
+    height: 100vh;
   }
 
   .right-panel {
