@@ -136,8 +136,8 @@
 
   /* ---- Page shell ---- */
   .page {
-    display: flex;
-    flex-direction: column;
+    display: grid;
+    grid-template-rows: auto 1fr auto;
     min-height: 100vh;
     box-sizing: border-box;
     padding: 0 1rem 0.5rem;
@@ -164,7 +164,6 @@
   /* ---- Split view ---- */
   .split-view {
     display: flex;
-    flex: 1;
     gap: 1.25rem;
     align-items: stretch;
   }
@@ -178,7 +177,7 @@
     align-self: flex-start;
     position: sticky;
     top: 0;
-    height: 100vh;
+    height: 100%;
   }
 
   .right-panel {
