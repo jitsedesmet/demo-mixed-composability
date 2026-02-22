@@ -8,9 +8,17 @@
 
   interface Props {
     query: string | undefined;
+    bindings?: Bindings[];
+    queryDone?: boolean;
+    queryRunning?: boolean;
+    queryStartTime?: number;
   }
   let {
     query = $bindable(),
+    bindings = $bindable<Bindings[]>([]),
+    queryDone = $bindable(false),
+    queryRunning = $bindable(false),
+    queryStartTime = $bindable(0),
   }: Props = $props();
   let error = $state<string | undefined>(undefined);
   const engine = new QueryEngine();
@@ -19,7 +27,7 @@
   }
   function yasge(element: HTMLElement, { query: startQuery }: Props): ActionReturn<YasgeContext> {
     const yasqe = new Yasqe(element, {
-      editorHeight: '300px',
+      editorHeight: '40svh',
       requestConfig: {
         method: "GET",
       }
@@ -31,21 +39,28 @@
       query = yasqe.getValue() as string;
       error = undefined;
       try {
-        // TODO: clear visualized results
+        bindings = [];
+        queryDone = false;
+        queryRunning = true;
+        queryStartTime = Date.now();
         const bindingStream = await engine.queryBindings(query, {
           sources: ["https://fragments.dbpedia.org/2016-04/en"]
         });
         bindingStream.on('data', (binding: Bindings) => {
-          // TODO: Add binding to visualized results (results should be visualized as they come in)
+          bindings.push(binding);
         });
-        bindingStream.on('error', (error: Error) => {
-          // TODO: communicate to the use that an error has occurred
+        bindingStream.on('error', (err: Error) => {
+          error = err.message;
+          queryRunning = false;
+          console.error(err);
         });
         bindingStream.on('end', () => {
-          // TODO: handle the fact that the query is done.
+          queryDone = true;
+          queryRunning = false;
         })
       } catch (err: unknown) {
         error = (err as Error).message;
+        queryRunning = false;
         console.error(err);
       }
     });

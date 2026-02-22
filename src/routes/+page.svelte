@@ -2,6 +2,8 @@
   import Yasge from "$lib/components/Yasge.svelte";
   import ToggleGroup from "$lib/components/ToggleGroup.svelte";
   import TabPanel from "$lib/components/TabPanel.svelte";
+  import QueryResults from "$lib/components/QueryResults.svelte";
+  import type {Bindings} from "@rdfjs/types";
 
   // Parser composition toggles
   const compositionOptions = ['SPARQL 1.2', 'Built-in Adjust', 'Lateral operation'];
@@ -21,29 +23,38 @@
 
   // Query & results
   let query = $state<string | undefined>();
+  let bindings = $state<Bindings[]>([]);
+  let queryDone = $state(false);
+  let queryRunning = $state(false);
+  let queryStartTime = $state(0);
+  let elapsed = $state(0);
 
-  interface Binding {
-    variable: string;
-    value: string;
-  }
+  $effect(() => {
+    if (!queryRunning) return;
+    const start = queryStartTime;
+    elapsed = 0;
+    const id = setInterval(() => {
+      elapsed = (Date.now() - start) / 1000;
+    }, 100);
+    return () => {
+      clearInterval(id);
+      elapsed = (Date.now() - start) / 1000;
+    };
+  });
 
-  interface BindingGroup {
-    bindings: Binding[];
-  }
-
-  // Placeholder result rows — will be populated by real query execution later
-  const resultGroups: BindingGroup[] = [];
+  // Layout measurements for left-panel height composition
+  let headerHeight = $state(0);
+  let footerHeight = $state(0);
 </script>
 
 <div class="page">
-  <header>
+  <header bind:clientHeight={headerHeight}>
     <h1>SPARQL Engine &amp; Parser Composability</h1>
   </header>
 
   <main class="split-view">
     <!-- ===== LEFT PANEL ===== -->
-    <div class="left-panel">
-
+    <div class="left-panel" style="height: calc(100svh - {headerHeight}px - {footerHeight}px - 8px - 12px)">
       <!-- Parser section -->
       <section class="config-section">
         <ToggleGroup
@@ -106,47 +117,28 @@
           <p class="placeholder">Config File 3 contents.</p>
         {/snippet}
       </section>
-
     </div>
 
     <!-- ===== RIGHT PANEL ===== -->
     <div class="right-panel">
       <section class="query-section">
         <h2>Query</h2>
-        <Yasge bind:query />
+        <Yasge bind:query bind:bindings bind:queryDone bind:queryRunning bind:queryStartTime />
       </section>
 
       <section class="results-section">
-        <h2>Results</h2>
-        {#if resultGroups.length === 0}
-          <p class="placeholder">No results yet. Execute a query to see results here.</p>
-        {:else}
-          {#each resultGroups as group, i}
-            <div class="result-group" aria-label="Result binding {i + 1}">
-              <table class="result-table">
-                <thead>
-                  <tr>
-                    <th>Variable</th>
-                    <th>Value</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {#each group.bindings as binding}
-                    <tr>
-                      <td>{binding.variable}</td>
-                      <td>{binding.value}</td>
-                    </tr>
-                  {/each}
-                </tbody>
-              </table>
-            </div>
-          {/each}
-        {/if}
+        <div class="results-header">
+          <h2>Results</h2>
+          {#if queryRunning || queryDone}
+            <span class="query-timer">{bindings.length} result{bindings.length === 1 ? '' : 's'} in {elapsed.toFixed(1)}s{queryRunning ? '…' : ''}</span>
+          {/if}
+        </div>
+        <QueryResults {bindings} {queryDone} />
       </section>
     </div>
   </main>
 
-  <footer>
+  <footer bind:clientHeight={footerHeight}>
     <a href="https://github.com/jitsedesmet/demo-mixed-composability">
       <svg height="1.5rem" aria-hidden="true" viewBox="0 0 24 24" version="1.1" width="24">
         <path d="M12 1C5.9225 1 1 5.9225 1 12C1 16.8675 4.14875 20.9787 8.52125 22.4362C9.07125 22.5325 9.2775 22.2025 9.2775 21.9137C9.2775 21.6525 9.26375 20.7862 9.26375 19.865C6.5 20.3737 5.785 19.1912 5.565 18.5725C5.44125 18.2562 4.905 17.28 4.4375 17.0187C4.0525 16.8125 3.5025 16.3037 4.42375 16.29C5.29 16.2762 5.90875 17.0875 6.115 17.4175C7.105 19.0812 8.68625 18.6137 9.31875 18.325C9.415 17.61 9.70375 17.1287 10.02 16.8537C7.5725 16.5787 5.015 15.63 5.015 11.4225C5.015 10.2262 5.44125 9.23625 6.1425 8.46625C6.0325 8.19125 5.6475 7.06375 6.2525 5.55125C6.2525 5.55125 7.17375 5.2625 9.2775 6.67875C10.1575 6.43125 11.0925 6.3075 12.0275 6.3075C12.9625 6.3075 13.8975 6.43125 14.7775 6.67875C16.8813 5.24875 17.8025 5.55125 17.8025 5.55125C18.4075 7.06375 18.0225 8.19125 17.9125 8.46625C18.6138 9.23625 19.04 10.2125 19.04 11.4225C19.04 15.6437 16.4688 16.5787 14.0213 16.8537C14.42 17.1975 14.7638 17.8575 14.7638 18.8887C14.7638 20.36 14.75 21.5425 14.75 21.9137C14.75 22.2025 14.9563 22.5462 15.5063 22.4362C19.8513 20.9787 23 16.8537 23 12C23 5.9225 18.0775 1 12 1Z"></path>
@@ -197,7 +189,7 @@
     display: flex;
     flex: 1;
     gap: 1.25rem;
-    align-items: stretch;
+    align-items: flex-start;
   }
 
   .left-panel {
@@ -206,6 +198,9 @@
     display: flex;
     flex-direction: column;
     gap: 1.25rem;
+    position: sticky;
+    top: 0;
+    align-self: flex-start;
   }
 
   .right-panel {
@@ -237,34 +232,21 @@
     background: #fafbfc;
   }
 
-  /* ---- Result table ---- */
-  .result-group {
-    border: 2px solid #2194f3;
-    border-radius: 6px;
-    margin-bottom: 0.75rem;
-    overflow: hidden;
+  .results-header {
+    display: flex;
+    align-items: baseline;
+    margin-bottom: 0.4rem;
   }
 
-  .result-table {
-    width: 100%;
-    border-collapse: collapse;
+  .results-header h2 {
+    margin: 0;
+    flex: 1;
+  }
+
+  .query-timer {
     font-size: 0.88em;
-  }
-
-  .result-table th,
-  .result-table td {
-    text-align: left;
-    padding: 5px 10px;
-    border-bottom: 1px solid #e1e4e8;
-  }
-
-  .result-table th {
-    background: #f6f8fa;
-    font-weight: 600;
-  }
-
-  .result-table tr:last-child td {
-    border-bottom: none;
+    color: #555;
+    white-space: nowrap;
   }
 
   /* ---- Placeholder text ---- */
