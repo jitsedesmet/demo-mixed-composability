@@ -5,6 +5,10 @@
   import {QueryEngine} from "@comunica/query-sparql-file";
   import type {ActionReturn} from "svelte/action";
   import type {Bindings} from "@rdfjs/types";
+  import {sparql11ParserBuilder} from "@traqula/parser-sparql-1-1";
+  import { lex as lex11 } from "@traqula/rules-sparql-1-1";
+  import {sparql11GeneratorBuilder} from "@traqula/generator-sparql-1-1";
+  import {toAst11Builder} from "@traqula/algebra-sparql-1-1";
 
   interface Props {
     query: string | undefined;
@@ -44,8 +48,16 @@
         queryDone = false;
         queryRunning = true;
         queryStartTime = Date.now();
+
         const bindingStream = await engine.queryBindings(query, {
-          sources: ["https://fragments.dbpedia.org/2016-04/en"]
+          sources: ["https://fragments.dbpedia.org/2016-04/en"],
+          // TODO: create a lexer, parser, generator, toAst and toAlgebra using the configuration options selected by the feature buttons of parser.
+          parser: sparql11ParserBuilder.build({
+            tokenVocabulary: lex11.sparql11LexerBuilder.tokenVocabulary
+          }),
+          generator: sparql11GeneratorBuilder.build(),
+          toAst: toAst11Builder.build(),
+          toAlgebra: toAst11Builder.build(),
         });
         bindingStream.on('data', (binding: Bindings) => {
           bindings.push(binding);

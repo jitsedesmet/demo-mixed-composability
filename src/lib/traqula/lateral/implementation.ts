@@ -1,4 +1,4 @@
-import { createToken, IndirBuilder, LexerBuilder, type RuleDefReturn } from '@traqula/core';
+import { createToken, GeneratorBuilder, IndirBuilder, LexerBuilder, type RuleDefReturn } from '@traqula/core';
 import {Algebra, type AlgebraIndir, type AstIndir} from '@traqula/algebra-transformations-1-1'
 import type * as T11 from '@traqula/rules-sparql-1-1';
 import {lex as lex11} from '@traqula/rules-sparql-1-1';
@@ -12,7 +12,7 @@ import {sparql11GeneratorBuilder} from "@traqula/generator-sparql-1-1";
 //  ========= Lexer ==============
 // ===============================
 
-const lateral = createToken({
+export const lateral = createToken({
   name: 'Lateral',
   pattern: /lateral/i,
   label: 'Lateral pattern'
@@ -35,7 +35,7 @@ const origGroupGraphPatternParserRule = sparql11ParserBuilder
 const origGroupGraphPatternGeneratorRule = sparql11GeneratorBuilder
   .getRule('groupGraphPattern');
 
-const graphPatternNotTriples: T11.SparqlRule<
+export const graphPatternNotTriples: T11.SparqlRule<
   typeof origGraphPatternNotTriplesParserRule['name'],
   RuleDefReturn<typeof origGraphPatternNotTriplesParserRule> | PatternLateral
 > = {
@@ -53,7 +53,7 @@ const graphPatternNotTriples: T11.SparqlRule<
   }
 };
 
-const lateralGraphPattern: T11.SparqlRule<'lateralGraphPattern', PatternLateral> = {
+export const lateralGraphPattern: T11.SparqlRule<'lateralGraphPattern', PatternLateral> = {
   name: 'lateralGraphPattern',
   impl: ({ CONSUME, SUBRULE, ACTION }) => (C) => {
     const token = CONSUME(lateral);
@@ -148,8 +148,12 @@ export const lateralLexer = LexerBuilder
   .add(lateral);
 
 export const lateralParserBuilder = ParserBuilder.create(sparql11ParserBuilder)
-  .patchRule(graphPatternNotTriples)
-  .addRule(lateralGraphPattern);
+  .addRule(lateralGraphPattern)
+  .patchRule(graphPatternNotTriples);
+
+export const lateralGeneratorBuilder = GeneratorBuilder.create(sparql11GeneratorBuilder)
+  .addRule(lateralGraphPattern)
+  .patchRule(graphPatternNotTriples);
 
 
 
