@@ -3935,6 +3935,13 @@
   resolved "https://registry.yarnpkg.com/@eslint-community/regexpp/-/regexpp-4.12.2.tgz#bccdf615bcf7b6e8db830ec0b8d21c9a25de597b"
   integrity sha512-EriSTlt5OC9/7SXkRSCAhfSxxoSUgBm33OH+IkwbdpgoqsSsUg7y3uh+IICI/Qg4BBWr3U2i39RpmycbxMq4ew==
 
+"@eslint/compat@^2.0.2":
+  version "2.0.2"
+  resolved "https://registry.yarnpkg.com/@eslint/compat/-/compat-2.0.2.tgz#fc1495688664861870f5e7ee56999dc252b6dd52"
+  integrity sha512-pR1DoD0h3HfF675QZx0xsyrsU8q70Z/plx7880NOhS02NuWLgBCOMDL787nUeQ7EWLkxv3bPQJaarjcPQb2Dwg==
+  dependencies:
+    "@eslint/core" "^1.1.0"
+
 "@eslint/config-array@^0.21.1":
   version "0.21.1"
   resolved "https://registry.yarnpkg.com/@eslint/config-array/-/config-array-0.21.1.tgz#7d1b0060fea407f8301e932492ba8c18aff29713"
@@ -3955,6 +3962,13 @@
   version "0.17.0"
   resolved "https://registry.yarnpkg.com/@eslint/core/-/core-0.17.0.tgz#77225820413d9617509da9342190a2019e78761c"
   integrity sha512-yL/sLrpmtDaFEiUj1osRP4TI2MDz1AddJL+jZ7KSqvBuliN4xqYY54IfdN8qD8Toa6g1iloph1fxQNkjOxrrpQ==
+  dependencies:
+    "@types/json-schema" "^7.0.15"
+
+"@eslint/core@^1.1.0":
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/@eslint/core/-/core-1.1.0.tgz#51f5cd970e216fbdae6721ac84491f57f965836d"
+  integrity sha512-/nr9K9wkr3P1EzFTdFdMoLuo1PmIxjmwvPozwoSodjNBdefGujXQUF93u1DDZpEaTuDvMsIQddsd35BwtrW9Xw==
   dependencies:
     "@types/json-schema" "^7.0.15"
 
@@ -4364,6 +4378,14 @@
     "@traqula/rules-sparql-1-1" "^1.0.3"
     "@traqula/rules-sparql-1-2" "^1.0.3"
     rdf-data-factory "^2.0.1"
+
+"@traqula/rules-sparql-1-1-adjust@^1.0.3":
+  version "1.0.3"
+  resolved "https://registry.yarnpkg.com/@traqula/rules-sparql-1-1-adjust/-/rules-sparql-1-1-adjust-1.0.3.tgz#9eaff6ced1fdd88e0ee204c0721cf75caf7b7c9a"
+  integrity sha512-7qJHk9NIwNJh38B2YmNF7PsVbFsFZLHlnjYKOFsatjRflcCBXkzg2NnLUgtnExtgpcW3Wt2/2BNbaKYUCVv7Fg==
+  dependencies:
+    "@traqula/core" "^1.0.3"
+    "@traqula/rules-sparql-1-1" "^1.0.3"
 
 "@traqula/rules-sparql-1-1@^1.0.3":
   version "1.0.3"
