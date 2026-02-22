@@ -27,7 +27,7 @@
   }
   function yasge(element: HTMLElement, { query: startQuery }: Props): ActionReturn<YasgeContext> {
     const yasqe = new Yasqe(element, {
-      editorHeight: '300px',
+      editorHeight: '40svh',
       requestConfig: {
         method: "GET",
       }
