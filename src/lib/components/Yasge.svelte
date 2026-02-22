@@ -30,6 +30,7 @@
       editorHeight: '40svh',
       requestConfig: {
         method: "GET",
+        endpoint: "https://fragments.dbpedia.org/2016-04/en",
       }
     });
 
