@@ -29,14 +29,14 @@ export const config12: FullTraqulaConfig = {
         ],
         strTokens: [
           [
-            lex12.tilde,
-            lex12.annotationOpen,
-            lex12.annotationClose,
-            lex12.tripleTermOpen,
-            lex12.tripleTermClose,
-            lex12.reificationOpen,
-            lex12.reificationClose,
-            lex12.version,
+            "lex12.tilde",
+            "lex12.annotationOpen",
+            "lex12.annotationClose",
+            "lex12.tripleTermOpen",
+            "lex12.tripleTermClose",
+            "lex12.reificationOpen",
+            "lex12.reificationClose",
+            "lex12.version",
           ]
         ].join(',\n    ')
       }, {
@@ -54,15 +54,15 @@ export const config12: FullTraqulaConfig = {
           lex12.buildInOBJECT,
         ],
         strTokens: [
-          lex12.buildInLangDir,
-          lex12.buildInStrLangDir,
-          lex12.buildInHasLangDir,
-          lex12.buildInHasLang,
-          lex12.buildInIsTRIPLE,
-          lex12.buildInTRIPLE,
-          lex12.buildInSUBJECT,
-          lex12.buildInPREDICATE,
-          lex12.buildInOBJECT,
+          "lex12.buildInLangDir",
+          "lex12.buildInStrLangDir",
+          "lex12.buildInHasLangDir",
+          "lex12.buildInHasLang",
+          "lex12.buildInIsTRIPLE",
+          "lex12.buildInTRIPLE",
+          "lex12.buildInSUBJECT",
+          "lex12.buildInPREDICATE",
+          "lex12.buildInOBJECT",
         ].join(',\n    ')
       }, {
         before: lex11.terminals.langTag,
