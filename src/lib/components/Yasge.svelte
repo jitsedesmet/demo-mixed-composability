@@ -5,10 +5,7 @@
   import {QueryEngine} from "@comunica/query-sparql-file";
   import type {ActionReturn} from "svelte/action";
   import type {Bindings} from "@rdfjs/types";
-  import {sparql11ParserBuilder} from "@traqula/parser-sparql-1-1";
-  import { lex as lex11 } from "@traqula/rules-sparql-1-1";
-  import {sparql11GeneratorBuilder} from "@traqula/generator-sparql-1-1";
-  import {toAst11Builder} from "@traqula/algebra-sparql-1-1";
+  import { getActiveConfigs, buildLexer, buildParser, buildGenerator, buildToAlgebra, buildToAst } from "$lib/traqula/buildTraqula";
 
   interface Props {
     query: string | undefined;
@@ -16,6 +13,7 @@
     queryDone?: boolean;
     queryRunning?: boolean;
     queryStartTime?: number;
+    parserComposition?: Set<string>;
   }
   let {
     query = $bindable(),
@@ -23,6 +21,7 @@
     queryDone = $bindable(false),
     queryRunning = $bindable(false),
     queryStartTime = $bindable(0),
+    parserComposition = $bindable(new Set<string>()),
   }: Props = $props();
   let error = $state<string | undefined>(undefined);
   const engine = new QueryEngine();
@@ -49,15 +48,18 @@
         queryRunning = true;
         queryStartTime = Date.now();
 
+        const configs = getActiveConfigs(parserComposition);
+        const lexer = buildLexer(configs);
         const bindingStream = await engine.queryBindings(query, {
           sources: ["https://fragments.dbpedia.org/2016-04/en"],
-          // TODO: create a lexer, parser, generator, toAst and toAlgebra using the configuration options selected by the feature buttons of parser.
-          parser: sparql11ParserBuilder.build({
-            tokenVocabulary: lex11.sparql11LexerBuilder.tokenVocabulary
-          }),
-          generator: sparql11GeneratorBuilder.build(),
-          toAst: toAst11Builder.build(),
-          toAlgebra: toAst11Builder.build(),
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          parser: buildParser(configs, lexer) as any,
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          generator: buildGenerator(configs) as any,
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          toAst: buildToAst(configs) as any,
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          toAlgebra: buildToAlgebra(configs) as any,
         });
         bindingStream.on('data', (binding: Bindings) => {
           bindings.push(binding);

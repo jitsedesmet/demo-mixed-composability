@@ -3,7 +3,16 @@
   import ToggleGroup from "$lib/components/ToggleGroup.svelte";
   import TabPanel from "$lib/components/TabPanel.svelte";
   import QueryResults from "$lib/components/QueryResults.svelte";
+  import CodeBlock from "$lib/components/CodeBlock.svelte";
   import type {Bindings} from "@rdfjs/types";
+  import {
+    getActiveConfigs,
+    generateLexerCode,
+    generateParserCode,
+    generateGeneratorCode,
+    generateToAlgebraCode,
+    generateToAstCode,
+  } from "$lib/traqula/buildTraqula";
 
   // Parser composition toggles
   const compositionOptions = ['SPARQL 1.2', 'Built-in Adjust', 'Lateral operation'];
@@ -16,8 +25,15 @@
     return next;
   }
 
+  let parserConfigs = $derived(getActiveConfigs(parserComposition));
+  let lexerCode = $derived(generateLexerCode(parserConfigs));
+  let parserCode = $derived(generateParserCode(parserConfigs));
+  let generatorCode = $derived(generateGeneratorCode(parserConfigs));
+  let toAlgebraCode = $derived(generateToAlgebraCode(parserConfigs));
+  let toAstCode = $derived(generateToAstCode(parserConfigs));
+
   // Parser tabs
-  let parserActiveTab = $state('parser');
+  let parserActiveTab = $state('lexer');
   // Engine tabs
   let engineActiveTab = $state('config1');
 
@@ -76,26 +92,29 @@ WHERE {
 
         <TabPanel
           tabs={[
-            { id: 'parser',      label: 'Parser',      content: parserContent },
-            { id: 'generator',   label: 'Generator',   content: generatorContent },
-            { id: 'transformer', label: 'Transformer', content: transformerContent },
+            { id: 'lexer',      label: 'lexer',      content: lexerContent },
+            { id: 'parser',     label: 'parser',     content: parserContent },
+            { id: 'generator',  label: 'generator',  content: generatorContent },
+            { id: 'toAlgebra',  label: 'toAlgebra',  content: toAlgebraContent },
+            { id: 'toAst',      label: 'toAst',      content: toAstContent },
           ]}
           bind:activeTab={parserActiveTab}
         />
 
+        {#snippet lexerContent()}
+          <CodeBlock code={lexerCode} />
+        {/snippet}
         {#snippet parserContent()}
-          <p class="placeholder">Parser configuration for <strong>{[...parserComposition].join(', ') || 'none'}</strong>.</p>
-          <ul class="config-list">
-            <li>Builder()</li>
-            <li>&nbsp;&nbsp;· ReplaceRule()</li>
-            <li>&nbsp;&nbsp;· &hellip;</li>
-          </ul>
+          <CodeBlock code={parserCode} />
         {/snippet}
         {#snippet generatorContent()}
-          <p class="placeholder">Generator configuration for <strong>{[...parserComposition].join(', ') || 'none'}</strong>.</p>
+          <CodeBlock code={generatorCode} />
         {/snippet}
-        {#snippet transformerContent()}
-          <p class="placeholder">Transformer configuration for <strong>{[...parserComposition].join(', ') || 'none'}</strong>.</p>
+        {#snippet toAlgebraContent()}
+          <CodeBlock code={toAlgebraCode} />
+        {/snippet}
+        {#snippet toAstContent()}
+          <CodeBlock code={toAstCode} />
         {/snippet}
       </section>
 
@@ -133,7 +152,7 @@ WHERE {
     <div class="right-panel">
       <section class="query-section">
         <h2>Query</h2>
-        <Yasge bind:query bind:bindings bind:queryDone bind:queryRunning bind:queryStartTime />
+        <Yasge bind:query bind:bindings bind:queryDone bind:queryRunning bind:queryStartTime {parserComposition} />
       </section>
 
       <section class="results-section">
@@ -264,15 +283,6 @@ WHERE {
     color: #555;
     font-size: 0.88em;
     margin: 0;
-  }
-
-  .config-list {
-    margin: 0.25rem 0 0 0;
-    padding: 0;
-    list-style: none;
-    font-size: 0.88em;
-    color: #333;
-    font-family: monospace;
   }
 
   /* ---- Footer ---- */
