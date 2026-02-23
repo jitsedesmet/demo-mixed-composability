@@ -16,8 +16,8 @@
 
   // Parser composition toggles
   const compositionOptions = ['SPARQL 1.2', 'Built-in Adjust', 'Lateral operation'];
-  let parserComposition = $state(new Set<string>([compositionOptions[0]]));
-  let engineComposition = $state(new Set<string>([compositionOptions[0]]));
+  let parserComposition = $state(new Set<string>());
+  let engineComposition = $state(new Set<string>());
 
   function toggleOption(current: Set<string>, opt: string): Set<string> {
     const next = new Set(current);
