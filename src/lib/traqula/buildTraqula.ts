@@ -15,10 +15,18 @@ const OPTION_TO_CONFIG: Record<string, FullTraqulaConfig> = {
   'Lateral operation': configLateral,
 };
 
-export function getActiveConfigs(selected: Set<string>): FullTraqulaConfig[] {
+const OPTION_TO_COMMENT: Record<string, string> = {
+  'SPARQL 1.2': 'SPARQL 1.2',
+  'Built-in Adjust': 'ADJUST',
+  'Lateral operation': 'LATERAL',
+};
+
+export type ActiveConfig = { label: string; config: FullTraqulaConfig };
+
+export function getActiveConfigs(selected: Set<string>): ActiveConfig[] {
   return [...selected]
     .filter(opt => opt in OPTION_TO_CONFIG)
-    .map(opt => OPTION_TO_CONFIG[opt]);
+    .map(opt => ({ label: OPTION_TO_COMMENT[opt], config: OPTION_TO_CONFIG[opt] }));
 }
 
 function deduplicateImports(imports: string[]): string[] {
@@ -29,130 +37,153 @@ function deduplicateImports(imports: string[]): string[] {
 // Code string generation
 // ========================
 
-export function generateLexerCode(configs: FullTraqulaConfig[]): string {
+export function generateLexerCode(activeConfigs: ActiveConfig[]): string {
   const imports = deduplicateImports([
     "import { LexerBuilder } from '@traqula/core';",
     "import { lex as lex11 } from '@traqula/rules-sparql-1-1';",
-    ...configs.flatMap(c => c.lexer.imports),
+    ...activeConfigs.flatMap(({ config }) => config.lexer.imports),
   ]);
 
   const chain: string[] = [];
-  for (const config of configs) {
+  for (const { label, config } of activeConfigs) {
+    const configChain: string[] = [];
     for (const { strBefore, strTokens } of config.lexer.toAddBefore) {
-      chain.push(`.addBefore(${strBefore}, ${strTokens})`);
+      configChain.push(`.addBefore(${strBefore}, ${strTokens})`);
     }
     for (const { str } of config.lexer.toAdd) {
-      chain.push(`.add(${str})`);
+      configChain.push(`.add(${str})`);
     }
     for (const { str } of config.lexer.toDelete) {
-      chain.push(`.delete(${str})`);
+      configChain.push(`.delete(${str})`);
+    }
+    if (configChain.length > 0) {
+      chain.push(`// ${label}`, ...configChain);
     }
   }
 
   const base = 'LexerBuilder.create(lex11.sparql11LexerBuilder)';
   const varDecl = chain.length === 0
     ? `const myLexer = ${base};`
-    : `const myLexer = ${base}\n${chain.map(c => `  ${c}`).join('\n')};`;
+    : `const myLexer = ${base}\n${chain.map(c => `  ${c}`).join('\n')}`;
 
   return [...imports, '', varDecl].join('\n');
 }
 
-export function generateParserCode(configs: FullTraqulaConfig[]): string {
+export function generateParserCode(activeConfigs: ActiveConfig[]): string {
   const imports = deduplicateImports([
     "import { ParserBuilder } from '@traqula/core';",
     "import { sparql11ParserBuilder } from '@traqula/parser-sparql-1-1';",
-    "import { lex as lex11 } from '@traqula/rules-sparql-1-1';",
-    ...configs.flatMap(c => c.parser.imports),
+    ...activeConfigs.flatMap(({ config }) => config.parser.imports),
   ]);
 
   const chain: string[] = [];
-  for (const config of configs) {
+  for (const { label, config } of activeConfigs) {
+    const configChain: string[] = [];
     for (const { str } of config.parser.toAdd) {
-      chain.push(`.addRule(${str})`);
+      configChain.push(`.addRule(${str})`);
     }
     for (const { str } of config.parser.toPatch) {
-      chain.push(`.patchRule(${str})`);
+      configChain.push(`.patchRule(${str})`);
     }
     for (const { str } of config.parser.toDelete) {
-      chain.push(`.deleteRule(${str})`);
+      configChain.push(`.deleteRule(${str})`);
+    }
+    if (configChain.length > 0) {
+      chain.push(`// ${label}`, ...configChain);
     }
   }
-  chain.push(`.build({ tokenVocabulary: myLexer.tokenVocabulary })`);
 
   const base = 'ParserBuilder.create(sparql11ParserBuilder)';
-  const varDecl = `const myParser = ${base}\n${chain.map(c => `  ${c}`).join('\n')};`;
+  const varDecl = chain.length === 0
+    ? `const myParser = ${base};`
+    : `const myParser = ${base}\n${chain.map(c => `  ${c}`).join('\n')}`;
 
   return [...imports, '', varDecl].join('\n');
 }
 
-export function generateGeneratorCode(configs: FullTraqulaConfig[]): string {
+export function generateGeneratorCode(activeConfigs: ActiveConfig[]): string {
   const imports = deduplicateImports([
     "import { GeneratorBuilder } from '@traqula/core';",
     "import { sparql11GeneratorBuilder } from '@traqula/generator-sparql-1-1';",
-    ...configs.flatMap(c => c.generator.imports),
+    ...activeConfigs.flatMap(({ config }) => config.generator.imports),
   ]);
 
   const chain: string[] = [];
-  for (const config of configs) {
+  for (const { label, config } of activeConfigs) {
+    const configChain: string[] = [];
     for (const { str } of config.generator.toAdd) {
-      chain.push(`.addRule(${str})`);
+      configChain.push(`.addRule(${str})`);
     }
     for (const { str } of config.generator.toPatch) {
-      chain.push(`.patchRule(${str})`);
+      configChain.push(`.patchRule(${str})`);
+    }
+    if (configChain.length > 0) {
+      chain.push(`// ${label}`, ...configChain);
     }
   }
-  chain.push(`.build()`);
 
   const base = 'GeneratorBuilder.create(sparql11GeneratorBuilder)';
-  const varDecl = `const myGenerator = ${base}\n${chain.map(c => `  ${c}`).join('\n')};`;
+  const varDecl = chain.length === 0
+    ? `const myGenerator = ${base};`
+    : `const myGenerator = ${base}\n${chain.map(c => `  ${c}`).join('\n')}`;
 
   return [...imports, '', varDecl].join('\n');
 }
 
-export function generateToAlgebraCode(configs: FullTraqulaConfig[]): string {
+export function generateToAlgebraCode(activeConfigs: ActiveConfig[]): string {
   const imports = deduplicateImports([
     "import { IndirBuilder } from '@traqula/core';",
     "import { toAlgebra11Builder } from '@traqula/algebra-sparql-1-1';",
-    ...configs.flatMap(c => c.toAlgebra.imports),
+    ...activeConfigs.flatMap(({ config }) => config.toAlgebra.imports),
   ]);
 
   const chain: string[] = [];
-  for (const config of configs) {
+  for (const { label, config } of activeConfigs) {
+    const configChain: string[] = [];
     for (const { str } of config.toAlgebra.toAdd) {
-      chain.push(`.addRule(${str})`);
+      configChain.push(`.addRule(${str})`);
     }
     for (const { str } of config.toAlgebra.toPatch) {
-      chain.push(`.patchRule(${str})`);
+      configChain.push(`.patchRule(${str})`);
+    }
+    if (configChain.length > 0) {
+      chain.push(`// ${label}`, ...configChain);
     }
   }
-  chain.push(`.build()`);
 
   const base = 'IndirBuilder.create(toAlgebra11Builder)';
-  const varDecl = `const myToAlgebra = ${base}\n${chain.map(c => `  ${c}`).join('\n')};`;
+  const varDecl = chain.length === 0
+    ? `const myToAlgebra = ${base};`
+    : `const myToAlgebra = ${base}\n${chain.map(c => `  ${c}`).join('\n')}`;
 
   return [...imports, '', varDecl].join('\n');
 }
 
-export function generateToAstCode(configs: FullTraqulaConfig[]): string {
+export function generateToAstCode(activeConfigs: ActiveConfig[]): string {
   const imports = deduplicateImports([
     "import { IndirBuilder } from '@traqula/core';",
     "import { toAst11Builder } from '@traqula/algebra-sparql-1-1';",
-    ...configs.flatMap(c => c.toAst.imports),
+    ...activeConfigs.flatMap(({ config }) => config.toAst.imports),
   ]);
 
   const chain: string[] = [];
-  for (const config of configs) {
+  for (const { label, config } of activeConfigs) {
+    const configChain: string[] = [];
     for (const { str } of config.toAst.toAdd) {
-      chain.push(`.addRule(${str})`);
+      configChain.push(`.addRule(${str})`);
     }
     for (const { str } of config.toAst.toPatch) {
-      chain.push(`.patchRule(${str})`);
+      configChain.push(`.patchRule(${str})`);
+    }
+    if (configChain.length > 0) {
+      chain.push(`// ${label}`, ...configChain);
     }
   }
-  chain.push(`.build()`);
 
   const base = 'IndirBuilder.create(toAst11Builder)';
-  const varDecl = `const myToAst = ${base}\n${chain.map(c => `  ${c}`).join('\n')};`;
+  const varDecl = chain.length === 0
+    ? `const myToAst = ${base};`
+    : `const myToAst = ${base}\n${chain.map(c => `  ${c}`).join('\n')}`;
 
   return [...imports, '', varDecl].join('\n');
 }
@@ -161,9 +192,9 @@ export function generateToAstCode(configs: FullTraqulaConfig[]): string {
 // Actual component builders
 // ========================
 
-export function buildLexer(configs: FullTraqulaConfig[]): LexerBuilder {
+export function buildLexer(activeConfigs: ActiveConfig[]): LexerBuilder {
   let builder: any = LexerBuilder.create(lex11.sparql11LexerBuilder);
-  for (const config of configs) {
+  for (const { config } of activeConfigs) {
     for (const { before, tokens } of config.lexer.toAddBefore) {
       builder = (builder as any).addBefore(before, ...tokens);
     }
@@ -177,9 +208,9 @@ export function buildLexer(configs: FullTraqulaConfig[]): LexerBuilder {
   return builder as LexerBuilder;
 }
 
-export function buildParser(configs: FullTraqulaConfig[], lexer: LexerBuilder) {
+export function buildParser(activeConfigs: ActiveConfig[], lexer: LexerBuilder) {
   let builder: any = ParserBuilder.create(sparql11ParserBuilder);
-  for (const config of configs) {
+  for (const { config } of activeConfigs) {
     for (const { rule } of config.parser.toAdd) {
       builder = (builder as any).addRule(rule);
     }
@@ -193,9 +224,9 @@ export function buildParser(configs: FullTraqulaConfig[], lexer: LexerBuilder) {
   return (builder as any).build({ tokenVocabulary: lexer.tokenVocabulary });
 }
 
-export function buildGenerator(configs: FullTraqulaConfig[]) {
+export function buildGenerator(activeConfigs: ActiveConfig[]) {
   let builder: any = GeneratorBuilder.create(sparql11GeneratorBuilder);
-  for (const config of configs) {
+  for (const { config } of activeConfigs) {
     for (const { rule } of config.generator.toAdd) {
       builder = (builder as any).addRule(rule);
     }
@@ -206,9 +237,9 @@ export function buildGenerator(configs: FullTraqulaConfig[]) {
   return (builder as any).build();
 }
 
-export function buildToAlgebra(configs: FullTraqulaConfig[]) {
+export function buildToAlgebra(activeConfigs: ActiveConfig[]) {
   let builder: any = IndirBuilder.create(toAlgebra11Builder);
-  for (const config of configs) {
+  for (const { config } of activeConfigs) {
     for (const { rule } of config.toAlgebra.toAdd) {
       builder = (builder as any).addRule(rule);
     }
@@ -219,9 +250,9 @@ export function buildToAlgebra(configs: FullTraqulaConfig[]) {
   return (builder as any).build();
 }
 
-export function buildToAst(configs: FullTraqulaConfig[]) {
+export function buildToAst(activeConfigs: ActiveConfig[]) {
   let builder: any = IndirBuilder.create(toAst11Builder);
-  for (const config of configs) {
+  for (const { config } of activeConfigs) {
     for (const { rule } of config.toAst.toAdd) {
       builder = (builder as any).addRule(rule);
     }
