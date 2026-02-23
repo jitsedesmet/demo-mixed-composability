@@ -27,8 +27,7 @@ export const config12: FullTraqulaConfig = {
           lex12.reificationClose,
           lex12.version,
         ],
-        strTokens: [
-          [
+        strTokens: '\n    ' + [
             "lex12.tilde",
             "lex12.annotationOpen",
             "lex12.annotationClose",
@@ -37,8 +36,7 @@ export const config12: FullTraqulaConfig = {
             "lex12.reificationOpen",
             "lex12.reificationClose",
             "lex12.version",
-          ]
-        ].join(',\n    ')
+        ].join(',\n    ') + '\n  '
       }, {
         before: lex11.builtIn.langmatches,
         strBefore: "lex11.builtIn.langmatches",
@@ -53,7 +51,7 @@ export const config12: FullTraqulaConfig = {
           lex12.buildInPREDICATE,
           lex12.buildInOBJECT,
         ],
-        strTokens: [
+        strTokens: '\n    ' + [
           "lex12.buildInLangDir",
           "lex12.buildInStrLangDir",
           "lex12.buildInHasLangDir",
@@ -63,7 +61,7 @@ export const config12: FullTraqulaConfig = {
           "lex12.buildInSUBJECT",
           "lex12.buildInPREDICATE",
           "lex12.buildInOBJECT",
-        ].join(',\n    ')
+        ].join(',\n    ') + '\n  '
       }, {
         before: lex11.terminals.langTag,
         strBefore: "lex11.terminals.langTag",
