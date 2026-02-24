@@ -6,7 +6,8 @@
   "scripts": {
     "setup": "svelte-kit sync",
     "dev": "vite dev",
-    "build": "vite build",
+    "build": "npm run build:comunica && vite build",
+    "build:comunica": "tsc --project src/lib/comunica/tsconfig.engines.json --skipLibCheck && comunica-compile-config src/lib/comunica/engines/query-sparql-hdt/config/config-default.json > src/lib/comunica/engines/query-sparql-hdt/engine-default.js && comunica-compile-config src/lib/comunica/engines/query-sparql-hdt/config/config-browser.json > src/lib/comunica/engines/query-sparql-hdt/engine-browser.js",
     "preview": "vite preview",
     "prepare": "svelte-kit sync || echo ''",
     "check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
@@ -14,9 +15,11 @@
     "lint": "eslint ."
   },
   "devDependencies": {
+    "@comunica/actor-init-query": "^5.1.3",
     "@comunica/actor-query-source-identify-hdt": "^5.0.0",
     "@comunica/config-query-sparql-hdt": "^5.0.0",
-    "@comunica/query-sparql-file": "^5.1.3",
+    "@comunica/query-sparql-hdt": "^5.0.0",
+    "@comunica/runner-cli": "^5.1.3",
     "@eslint/compat": "^2.0.2",
     "@eslint/js": "^9.18.0",
     "@rdfjs/types": "^2.0.1",

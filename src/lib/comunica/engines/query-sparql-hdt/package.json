@@ -298,6 +298,7 @@
     "@comunica/runner-cli": "^5.1.3"
   },
   "browser": {
-    "./lib/index.js": "./lib/index-browser.js"
+    "./lib/index.js": "./lib/index-browser.js",
+    "./engine-default.js": "./engine-browser.js"
   }
 }

@@ -40,7 +40,7 @@ export class ActorQuerySourceIdentifyHdt extends ActorQuerySourceIdentify {
     );
   }
 
-  public async test(action: IActionQuerySourceIdentify): Promise<TestResult<IActorTest>> {
+  public async test(action: IActionQuerySourceIdentify): Promise<TestResult<IActorTest, undefined>> {
     const source = action.querySourceUnidentified;
     if (source.type !== 'hdt') {
       return failTest(`${this.name} requires a single query source with hdt type to be present in the context.`);
