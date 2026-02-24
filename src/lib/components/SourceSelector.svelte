@@ -105,6 +105,7 @@
 <style>
   .source-selector {
     position: relative;
+    margin-bottom: 0.5rem;
   }
 
   .input-area {

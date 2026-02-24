@@ -257,11 +257,8 @@ WHERE {
   }
 
   .source-label {
-    font-size: 0.88em;
-    font-weight: 600;
-    color: #c0392b;
-    display: block;
-    margin-bottom: 0.25rem;
+    font-weight: 500;
+    white-space: nowrap;
   }
 
   /* ---- Query / Results sections ---- */
