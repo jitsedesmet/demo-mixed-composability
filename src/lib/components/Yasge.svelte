@@ -14,6 +14,7 @@
     queryRunning?: boolean;
     queryStartTime?: number;
     parserComposition?: Set<string>;
+    sources?: string[];
   }
   let {
     query = $bindable(),
@@ -22,6 +23,7 @@
     queryRunning = $bindable(false),
     queryStartTime = $bindable(0),
     parserComposition = $bindable(new Set<string>()),
+    sources = ["https://fragments.dbpedia.org/2016-04/en"],
   }: Props = $props();
   let error = $state<string | undefined>(undefined);
   const engine = new QueryEngine();
@@ -51,7 +53,7 @@
         const configs = getActiveConfigs(parserComposition);
         const lexer = buildLexer(configs);
         const bindingStream = await engine.queryBindings(query, {
-          sources: ["https://fragments.dbpedia.org/2016-04/en"],
+          sources: sources,
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
           parser: buildParser(configs, lexer) as any,
           // eslint-disable-next-line @typescript-eslint/no-explicit-any

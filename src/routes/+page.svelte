@@ -4,6 +4,7 @@
   import TabPanel from "$lib/components/TabPanel.svelte";
   import QueryResults from "$lib/components/QueryResults.svelte";
   import CodeBlock from "$lib/components/CodeBlock.svelte";
+  import SourceSelector from "$lib/components/SourceSelector.svelte";
   import type {Bindings} from "@rdfjs/types";
   import {
     getActiveConfigs,
@@ -38,6 +39,7 @@
   let engineActiveTab = $state('config1');
 
   // Query & results
+  let selectedSources = $state<string[]>(["https://fragments.dbpedia.org/2016-04/en"]);
   let query = $state<string | undefined>(`PREFIX dbpedia-owl: <http://dbpedia.org/ontology/>
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 
@@ -152,7 +154,9 @@ WHERE {
     <div class="right-panel">
       <section class="query-section">
         <h2>Query</h2>
-        <Yasge bind:query bind:bindings bind:queryDone bind:queryRunning bind:queryStartTime {parserComposition} />
+        <span class="source-label">Choose datasources:</span>
+        <SourceSelector bind:selected={selectedSources} />
+        <Yasge bind:query bind:bindings bind:queryDone bind:queryRunning bind:queryStartTime {parserComposition} sources={selectedSources} />
       </section>
 
       <section class="results-section">
@@ -250,6 +254,14 @@ WHERE {
     padding: 0.75rem;
     background: #fafbfc;
     overflow: hidden;
+  }
+
+  .source-label {
+    font-size: 0.88em;
+    font-weight: 600;
+    color: #c0392b;
+    display: block;
+    margin-bottom: 0.25rem;
   }
 
   /* ---- Query / Results sections ---- */
