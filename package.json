@@ -5,7 +5,10 @@
   "type": "module",
   "scripts": {
     "setup": "svelte-kit sync",
+    "build:engine": "cd src/lib/comunica && yarn install",
+    "predev": "yarn run build:engine",
     "dev": "vite dev",
+    "prebuild": "yarn run build:engine",
     "build": "vite build",
     "preview": "vite preview",
     "prepare": "svelte-kit sync || echo ''",
@@ -14,7 +17,8 @@
     "lint": "eslint ."
   },
   "devDependencies": {
-    "@comunica/query-sparql-file": "^5.1.3",
+    "@local/config-query-sparql": "file:src/lib/comunica/engines/config-query-sparql",
+    "@local/query-sparql": "file:src/lib/comunica/engines/query-sparql",
     "@eslint/compat": "^2.0.2",
     "@eslint/js": "^9.18.0",
     "@rdfjs/types": "^2.0.1",
@@ -38,6 +42,9 @@
     "vite": "^7.3.1"
   },
   "packageManager": "yarn@1.22.22+sha512.a6b2f7906b721bba3d67d4aff083df04dad64c399707841b7acf00f6b133b7ac24255f2652fa22ae3534329dc6180534e98d17432037ff6fd140556e2bb3137e",
+  "resolutions": {
+    "@local/config-query-sparql": "file:src/lib/comunica/engines/config-query-sparql"
+  },
   "dependencies": {
     "highlight.js": "^11.11.1"
   }
