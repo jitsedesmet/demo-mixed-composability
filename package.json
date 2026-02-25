@@ -5,9 +5,10 @@
   "type": "module",
   "scripts": {
     "setup": "svelte-kit sync",
-    "build:engine": "cd src/lib/comunica && yarn install && cd - && cp src/lib/comunica/engines/query-sparql/engine-default.js node_modules/@local/query-sparql/ && cp src/lib/comunica/engines/query-sparql/lib/*.js src/lib/comunica/engines/query-sparql/lib/*.js.map node_modules/@local/query-sparql/lib/ && rm -rf node_modules/.vite/deps",
+    "build:engine": "cd comunica && yarn install && cd - && cp comunica/engines/query-sparql/engine-default.js node_modules/@local/query-sparql/ && cp comunica/engines/query-sparql/lib/*.js comunica/engines/query-sparql/lib/*.js.map node_modules/@local/query-sparql/lib/ && rm -rf node_modules/.vite/deps",
     "predev": "yarn run build:engine",
     "dev": "vite dev",
+    "clean": "git clean -dfx",
     "prebuild": "yarn run build:engine",
     "build": "vite build",
     "preview": "vite preview",
@@ -17,8 +18,8 @@
     "lint": "eslint ."
   },
   "devDependencies": {
-    "@local/config-query-sparql": "file:src/lib/comunica/engines/config-query-sparql",
-    "@local/query-sparql": "file:src/lib/comunica/engines/query-sparql",
+    "@local/config-query-sparql": "file:comunica/engines/config-query-sparql",
+    "@local/query-sparql": "file:comunica/engines/query-sparql",
     "@eslint/compat": "^2.0.2",
     "@eslint/js": "^9.18.0",
     "@rdfjs/types": "^2.0.1",
@@ -43,7 +44,7 @@
   },
   "packageManager": "yarn@1.22.22+sha512.a6b2f7906b721bba3d67d4aff083df04dad64c399707841b7acf00f6b133b7ac24255f2652fa22ae3534329dc6180534e98d17432037ff6fd140556e2bb3137e",
   "resolutions": {
-    "@local/config-query-sparql": "file:src/lib/comunica/engines/config-query-sparql"
+    "@local/config-query-sparql": "file:comunica/engines/config-query-sparql"
   },
   "dependencies": {
     "highlight.js": "^11.11.1"
