@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "setup": "svelte-kit sync",
-    "build:engine": "cd src/lib/comunica && yarn install",
+    "build:engine": "cd src/lib/comunica && yarn install && cd - && cp src/lib/comunica/engines/query-sparql/engine-default.js node_modules/@local/query-sparql/ && cp src/lib/comunica/engines/query-sparql/lib/*.js src/lib/comunica/engines/query-sparql/lib/*.js.map node_modules/@local/query-sparql/lib/",
     "predev": "yarn run build:engine",
     "dev": "vite dev",
     "prebuild": "yarn run build:engine",
