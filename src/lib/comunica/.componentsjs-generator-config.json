@@ -1,0 +1,11 @@
+{
+  "source": "lib",
+  "ignorePackagePaths": [
+    "engines/query-sparql-hdt"
+  ],
+  "ignoreComponents": [
+    "HdtIterator",
+    "QuerySourceHdt"
+  ],
+  "modulePrefix": {}
+}
