@@ -2,7 +2,7 @@
   // https://docs.triply.cc/yasgui-api/#yasgui-api-reference
   // https://www.youtube.com/watch?v=Y5IiSdcqdeQ&themeRefresh=1
   import Yasqe from "@triply/yasqe";
-  import {QueryEngine} from "@comunica/query-sparql-file";
+  import {QueryEngine} from "@local/query-sparql";
   import type {ActionReturn} from "svelte/action";
   import type {Bindings} from "@rdfjs/types";
   import { getActiveConfigs, buildLexer, buildParser, buildGenerator, buildToAlgebra, buildToAst } from "$lib/traqula/buildTraqula";

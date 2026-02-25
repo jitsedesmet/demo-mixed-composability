@@ -3,6 +3,6 @@
     "https://linkedsoftwaredependencies.org/bundles/npm/@local/config-query-sparql/^5.0.0/components/context.jsonld"
   ],
   "import": [
-    "ccqs:config/config-default.json"
+    "lcqs:config/config-default.json"
   ]
 }
