@@ -6,7 +6,7 @@
   import CodeBlock from "$lib/components/CodeBlock.svelte";
   import SourceSelector from "$lib/components/SourceSelector.svelte";
   import type {Bindings} from "@rdfjs/types";
-  import { page } from "$app/state";
+  import { getQueryParam } from "$lib/helpers.svelte";
   import {
     getActiveConfigs,
     generateLexerCode,
@@ -52,7 +52,7 @@ WHERE {
   FILTER LANGMATCHES(LANG(?title), "EN")
   FILTER LANGMATCHES(LANG(?name),  "EN")
 }`;
-  let query = $state<string | undefined>(page.url.searchParams.get('query') ?? defaultQuery);
+  let query = $state<string | undefined>(getQueryParam('query') ?? defaultQuery);
   let bindings = $state<Bindings[]>([]);
   let queryDone = $state(false);
   let queryRunning = $state(false);

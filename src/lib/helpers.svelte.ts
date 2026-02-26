@@ -5,3 +5,7 @@ export function alterQuery(key: string, value: string): string {
   url.searchParams.set(key, value);
   return url.search;
 }
+
+export function getQueryParam(key: string): string | null {
+  return page.url.searchParams.get(key);
+}

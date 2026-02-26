@@ -6,6 +6,7 @@
   import type {ActionReturn} from "svelte/action";
   import type {Bindings} from "@rdfjs/types";
   import { getActiveConfigs, buildLexer, buildParser, buildGenerator, buildToAlgebra, buildToAst } from "$lib/traqula/buildTraqula";
+  import { alterQuery } from "$lib/helpers.svelte";
 
   interface Props {
     query: string | undefined;
@@ -43,8 +44,7 @@
 
     yasqe.on('query', async () => {
       query = yasqe.getValue() as string;
-      const params = new URLSearchParams({ query });
-      window.history.replaceState({}, '', `${window.location.pathname}?${params.toString()}`);
+      window.history.replaceState({}, '', window.location.pathname + alterQuery('query', query));
       error = undefined;
       try {
         bindings = [];
