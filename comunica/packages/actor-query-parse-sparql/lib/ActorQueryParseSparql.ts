@@ -2,11 +2,14 @@ import type { IActionQueryParse, IActorQueryParseArgs, IActorQueryParseOutput } 
 import { ActorQueryParse } from '@comunica/bus-query-parse';
 import { KeysInitQuery } from '@comunica/context-entries';
 import type { IActorTest, TestResult } from '@comunica/core';
-import { failTest, passTestVoid } from '@comunica/core';
+import { ActionContextKey, failTest, passTestVoid } from '@comunica/core';
 import type { ComunicaDataFactory } from '@comunica/types';
 import { toAlgebra } from '@traqula/algebra-sparql-1-2';
 import { Parser as SparqlParser } from '@traqula/parser-sparql-1-2';
 import { AstFactory } from '@traqula/rules-sparql-1-2';
+
+export const parserKey = new ActionContextKey<SparqlParser>('@local/actor-query-parse-sparql:parser');
+export const toAlgebraKey = new ActionContextKey<typeof toAlgebra>('@local/actor-query-parse-sparql:toAlgebra');
 
 /**
  * A comunica Algebra SPARQL Parse Actor.
@@ -33,7 +36,9 @@ export class ActorQueryParseSparql extends ActorQueryParse {
   public async run(action: IActionQueryParse): Promise<IActorQueryParseOutput> {
     const dataFactory: ComunicaDataFactory = action.context.getSafe(KeysInitQuery.dataFactory);
     const astFactory = new AstFactory();
-    const parsedSyntax = this.parser.parse(action.query, {
+    const parser = action.context.get(parserKey) ?? this.parser;
+    const myToAlgebra = action.context.get(toAlgebraKey) ?? toAlgebra;
+    const parsedSyntax = parser.parse(action.query, {
       prefixes: this.prefixes,
       baseIRI: action.baseIRI,
       astFactory,
@@ -48,7 +53,7 @@ export class ActorQueryParseSparql extends ActorQueryParse {
     }
     return {
       baseIRI,
-      operation: toAlgebra(parsedSyntax, {
+      operation: myToAlgebra(parsedSyntax, {
         quads: true,
         prefixes: this.prefixes,
         blankToVariable: true,

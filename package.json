@@ -19,6 +19,7 @@
   },
   "devDependencies": {
     "@local/config-query-sparql": "file:comunica/engines/config-query-sparql",
+    "@local/actor-query-parse-sparql": "file:comunica/packages/actor-query-parse-sparql",
     "@local/query-sparql": "file:comunica/engines/query-sparql",
     "@eslint/compat": "^2.0.2",
     "@eslint/js": "^9.18.0",

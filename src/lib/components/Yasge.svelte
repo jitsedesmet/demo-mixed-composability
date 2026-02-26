@@ -15,6 +15,7 @@
   } from "$lib/traqula/buildTraqula";
   import {alterQuery} from "$lib/helpers.svelte";
   import {replaceState} from "$app/navigation";
+  import {parserKey, toAlgebraKey} from "@local/actor-query-parse-sparql";
 
   interface Props {
     query: string | undefined;
@@ -65,13 +66,13 @@
         const bindingStream = await engine.queryBindings(query, {
           sources: sources,
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          parser: buildParser(configs, lexer) as any,
+          [parserKey.name]: buildParser(configs, lexer) as any,
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
           generator: buildGenerator(configs) as any,
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
           toAst: buildToAst(configs) as any,
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          toAlgebra: buildToAlgebra(configs) as any,
+          [toAlgebraKey.name]: buildToAlgebra(configs) as any,
         });
         bindingStream.on('data', (binding: Bindings) => {
           bindings.push(binding);
