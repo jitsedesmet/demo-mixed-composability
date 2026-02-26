@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { LexerBuilder, ParserBuilder, GeneratorBuilder, IndirBuilder } from '@traqula/core';
-import { lex as lex11 } from '@traqula/rules-sparql-1-1';
+import { lex as lex11, MinimalSparqlParser } from '@traqula/rules-sparql-1-1';
 import { sparql11ParserBuilder } from '@traqula/parser-sparql-1-1';
 import { sparql11GeneratorBuilder } from '@traqula/generator-sparql-1-1';
 import { toAlgebra11Builder, toAst11Builder } from '@traqula/algebra-sparql-1-1';
@@ -221,7 +221,7 @@ export function buildParser(activeConfigs: ActiveConfig[], lexer: LexerBuilder) 
       builder = (builder as any).deleteRule(rule);
     }
   }
-  return (builder as any).build({ tokenVocabulary: lexer.tokenVocabulary });
+  return new MinimalSparqlParser((builder as any).build({ tokenVocabulary: lexer.tokenVocabulary }));
 }
 
 export function buildGenerator(activeConfigs: ActiveConfig[]) {
