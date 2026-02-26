@@ -43,7 +43,7 @@
     "browser-profile": "node \"../../node_modules/webpack/bin/webpack.js\" --mode production --profile --json > stats.json && node \"../../node_modules/.bin/webpack-bundle-analyzer\" stats.json && rm stats.json"
   },
   "dependencies": {
-    "@local/config-query-sparql": "file:config-query-sparql",
+    "@local/config-query-sparql": "file:../config-query-sparql",
     "@local/actor-query-parse-sparql": "file:../../packages/actor-query-parse-sparql",
 
     "@comunica/actor-bindings-aggregator-factory-average": "^5.1.3",
