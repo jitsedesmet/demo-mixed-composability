@@ -52,7 +52,7 @@ WHERE {
   FILTER LANGMATCHES(LANG(?title), "EN")
   FILTER LANGMATCHES(LANG(?name),  "EN")
 }`;
-  let query = $state<string | undefined>(getQueryParam('query') ?? defaultQuery);
+  let query = $state<string>(getQueryParam('query') ?? defaultQuery);
   let bindings = $state<Bindings[]>([]);
   let queryDone = $state(false);
   let queryRunning = $state(false);
