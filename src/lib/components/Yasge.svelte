@@ -5,7 +5,16 @@
   import {QueryEngine} from "@local/query-sparql";
   import type {ActionReturn} from "svelte/action";
   import type {Bindings} from "@rdfjs/types";
-  import { getActiveConfigs, buildLexer, buildParser, buildGenerator, buildToAlgebra, buildToAst } from "$lib/traqula/buildTraqula";
+  import {
+    buildGenerator,
+    buildLexer,
+    buildParser,
+    buildToAlgebra,
+    buildToAst,
+    getActiveConfigs
+  } from "$lib/traqula/buildTraqula";
+  import {alterQuery} from "$lib/helpers.svelte";
+  import {replaceState} from "$app/navigation";
 
   interface Props {
     query: string | undefined;
@@ -43,6 +52,7 @@
 
     yasqe.on('query', async () => {
       query = yasqe.getValue() as string;
+      replaceState(alterQuery('query', query), {});
       error = undefined;
       try {
         bindings = [];
