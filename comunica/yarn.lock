@@ -2711,19 +2711,6 @@
     "@comunica/core" "^5.1.3"
     graphql-to-sparql "^6.0.0"
 
-"@comunica/actor-query-parse-sparql@^5.1.3":
-  version "5.1.3"
-  resolved "https://registry.yarnpkg.com/@comunica/actor-query-parse-sparql/-/actor-query-parse-sparql-5.1.3.tgz#0919363194c1e094eec4470e5810143e55604cd9"
-  integrity sha512-4yHDWglryUd1alDBu7OW2lKH2tirxE26Z6RtcNPCNA9NNz55gufPJtB1eBwnoq/anNgzAvlwnaZohmDDnLKrGg==
-  dependencies:
-    "@comunica/bus-query-parse" "^5.1.3"
-    "@comunica/context-entries" "^5.1.3"
-    "@comunica/core" "^5.1.3"
-    "@comunica/types" "^5.1.3"
-    "@traqula/algebra-sparql-1-2" "^1.0.1"
-    "@traqula/parser-sparql-1-2" "^1.0.1"
-    "@traqula/rules-sparql-1-2" "^1.0.1"
-
 "@comunica/actor-query-process-explain-logical@^5.1.3":
   version "5.1.3"
   resolved "https://registry.yarnpkg.com/@comunica/actor-query-process-explain-logical/-/actor-query-process-explain-logical-5.1.3.tgz#a597d5743639e13eff6e6429892f91236c5f334c"

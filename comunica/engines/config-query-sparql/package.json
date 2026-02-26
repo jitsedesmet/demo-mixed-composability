@@ -30,6 +30,7 @@
     "build:components": "componentsjs-generator"
   },
   "dependencies": {
+    "@local/actor-query-parse-sparql": "^5.1.3",
     "@comunica/config-query-sparql": "~5.0.0"
   }
 }
