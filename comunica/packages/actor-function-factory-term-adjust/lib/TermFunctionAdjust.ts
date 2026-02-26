@@ -1,17 +1,10 @@
 import { TermFunctionBase } from '@comunica/bus-function-factory';
-import type {
-
-  DateLiteral,
-} from '@comunica/utils-expression-evaluator';
-import {
-  declare,
-  integer,
-  SparqlOperator,
-  TypeURL,
-} from '@comunica/utils-expression-evaluator';
+import type { DateLiteral, DayTimeDurationLiteral } from '@comunica/utils-expression-evaluator';
+import { declare, integer, TypeURL } from '@comunica/utils-expression-evaluator';
 
 /**
- * https://www.w3.org/TR/sparql11-query/#func-day
+ * https://github.com/w3c/sparql-dev/blob/main/SEP/SEP-0002/sep-0002.md
+ * https://www.w3.org/TR/xpath-functions/#func-adjust-dateTime-to-timezone
  */
 export class TermFunctionAdjust extends TermFunctionBase {
   public constructor() {
@@ -19,11 +12,11 @@ export class TermFunctionAdjust extends TermFunctionBase {
       arity: 1,
       operator: 'adjust',
       overloads: declare('adjust')
-        // TODO: fix implementation when implementing all operators.
-        .onDateTime1(
-          () => date => integer(date.typedValue.day),
-        )
-        .set([ TypeURL.XSD_DATE ], () => ([ date ]: [DateLiteral]) => integer(date.typedValue.day))
+        // ExprEval.context.getSafe(KeysExpressionEvaluator.defaultTimeZone)
+        .set([ TypeURL.XSD_DATE_TIME ], () => ([ date ]: [DateLiteral]) =>
+          integer(date.typedValue.year))
+        .set([ TypeURL.XSD_DATE_TIME, TypeURL.XSD_DAY_TIME_DURATION ], () =>
+          ([ date, timezone ]: [DateLiteral, DayTimeDurationLiteral]) => integer(date.typedValue.year))
         .collect(),
     });
   }
