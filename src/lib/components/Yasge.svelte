@@ -43,6 +43,8 @@
 
     yasqe.on('query', async () => {
       query = yasqe.getValue() as string;
+      const params = new URLSearchParams({ query });
+      window.history.replaceState({}, '', `${window.location.pathname}?${params.toString()}`);
       error = undefined;
       try {
         bindings = [];

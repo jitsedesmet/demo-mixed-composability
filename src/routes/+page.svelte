@@ -6,6 +6,7 @@
   import CodeBlock from "$lib/components/CodeBlock.svelte";
   import SourceSelector from "$lib/components/SourceSelector.svelte";
   import type {Bindings} from "@rdfjs/types";
+  import { page } from "$app/state";
   import {
     getActiveConfigs,
     generateLexerCode,
@@ -40,7 +41,7 @@
 
   // Query & results
   let selectedSources = $state<string[]>(["https://fragments.dbpedia.org/2016-04/en"]);
-  let query = $state<string | undefined>(`PREFIX dbpedia-owl: <http://dbpedia.org/ontology/>
+  const defaultQuery = `PREFIX dbpedia-owl: <http://dbpedia.org/ontology/>
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 
 SELECT ?movie ?title ?name
@@ -50,7 +51,8 @@ WHERE {
          dbpedia-owl:director [ rdfs:label ?name ].
   FILTER LANGMATCHES(LANG(?title), "EN")
   FILTER LANGMATCHES(LANG(?name),  "EN")
-}`);
+}`;
+  let query = $state<string | undefined>(page.url.searchParams.get('query') ?? defaultQuery);
   let bindings = $state<Bindings[]>([]);
   let queryDone = $state(false);
   let queryRunning = $state(false);
