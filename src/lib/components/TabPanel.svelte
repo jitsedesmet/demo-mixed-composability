@@ -52,6 +52,8 @@
     display: flex;
     background: #f6f8fa;
     border-bottom: 1px solid #ccc;
+    overflow-x: auto;
+    overflow-y: hidden;
   }
 
   .tab-bar button {
