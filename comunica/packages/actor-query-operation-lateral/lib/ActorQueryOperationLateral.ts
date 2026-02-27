@@ -1,12 +1,13 @@
-import type { IActorQueryOperationTypedMediatedArgs } from '@comunica/bus-query-operation';
+import type { IActionQueryOperation, IActorQueryOperationTypedMediatedArgs } from '@comunica/bus-query-operation';
 import { ActorQueryOperationTypedMediated } from '@comunica/bus-query-operation';
 import type { MediatorRdfMetadataAccumulate } from '@comunica/bus-rdf-metadata-accumulate';
 import type { IActorTest, TestResult } from '@comunica/core';
-import { passTestVoid } from '@comunica/core';
+import { failTest, ActionContextKey, passTestVoid } from '@comunica/core';
 import type {
   BindingsStream,
   IActionContext,
-  IQueryOperationResult, IQueryOperationResultBindings,
+  IQueryOperationResult,
+  IQueryOperationResultBindings,
   IQueryOperationResultQuads,
   MetadataBindings,
   MetadataQuads,
@@ -14,7 +15,7 @@ import type {
 } from '@comunica/types';
 import type { Algebra } from '@comunica/utils-algebra';
 import { MetadataValidationState } from '@comunica/utils-metadata';
-import {getSafeBindings, getSafeQuads} from '@comunica/utils-query-operation';
+import { getSafeBindings, getSafeQuads } from '@comunica/utils-query-operation';
 import type * as RDF from '@rdfjs/types';
 import { UnionIterator } from 'asynciterator';
 
@@ -22,6 +23,8 @@ export type Lateral = {
   type: 'lateral';
   input: [Algebra.Operation, Algebra.Operation];
 };
+
+export const lateralSupportKey = new ActionContextKey<boolean>('@local/actor-query-operation-lateral:active');
 
 /**
  * A comunica Union Query Operation Actor.
@@ -114,6 +117,13 @@ export class ActorQueryOperationLateral extends ActorQueryOperationTypedMediated
     }
 
     return accumulatedMetadata;
+  }
+
+  public override async test(action: IActionQueryOperation): Promise<TestResult<IActorTest>> {
+    if (!action.context.get(lateralSupportKey)) {
+      return failTest('');
+    }
+    return super.test(action);
   }
 
   public async testOperation(_operation: Lateral, _context: IActionContext): Promise<TestResult<IActorTest>> {

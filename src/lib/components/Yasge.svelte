@@ -16,6 +16,8 @@
   import {alterQuery} from "$lib/helpers.svelte";
   import {replaceState} from "$app/navigation";
   import {parserKey, toAlgebraKey} from "@local/actor-query-parse-sparql";
+  import {lateralSupportKey} from "../../../comunica/packages/actor-query-operation-lateral";
+  import {adjustSupportKey} from "@local/actor-function-factory-term-adjust";
 
   interface Props {
     query: string | undefined;
@@ -73,6 +75,10 @@
           toAst: buildToAst(configs) as any,
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
           [toAlgebraKey.name]: buildToAlgebra(configs) as any,
+          // TODO: check whether it is active in the engine configuration of the UI
+          [lateralSupportKey.name]: true,
+          // TODO: check whether it is active in the engine configuration of the UI
+          [adjustSupportKey.name]: true,
         });
         bindingStream.on('data', (binding: Bindings) => {
           bindings.push(binding);
