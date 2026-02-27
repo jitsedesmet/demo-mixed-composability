@@ -46,6 +46,7 @@
     "@local/config-query-sparql": "file:../config-query-sparql",
     "@local/actor-query-parse-sparql": "file:../../packages/actor-query-parse-sparql",
     "@local/actor-function-factory-term-adjust": "file:../../packages/actor-function-factory-term-adjust",
+    "@local/actor-query-operation-lateral": "file:../../packages/actor-query-operation-lateral",
 
     "@comunica/actor-bindings-aggregator-factory-average": "^5.1.3",
     "@comunica/actor-bindings-aggregator-factory-count": "^5.1.3",
