@@ -4960,8 +4960,8 @@
   version "5.0.0"
   dependencies:
     "@comunica/config-query-sparql" "~5.0.0"
-    "@local/actor-function-factory-term-adjust" "file:../../../../../.cache/yarn/v6/npm-@local-config-query-sparql-5.0.0-9fb4e7e8-3ae6-4b5d-b6f6-6eee137a4928-1772186640315/node_modules/packages/actor-function-factory-term-adjust"
-    "@local/actor-query-parse-sparql" "file:../../../../../.cache/yarn/v6/npm-@local-config-query-sparql-5.0.0-9fb4e7e8-3ae6-4b5d-b6f6-6eee137a4928-1772186640315/node_modules/packages/actor-query-parse-sparql"
+    "@local/actor-function-factory-term-adjust" "file:../../../../.cache/yarn/v6/npm-@local-config-query-sparql-5.0.0-ba6bbac7-7d71-4e06-a305-a6295dafea68-1772201803425/node_modules/packages/actor-function-factory-term-adjust"
+    "@local/actor-query-parse-sparql" "file:../../../../.cache/yarn/v6/npm-@local-config-query-sparql-5.0.0-ba6bbac7-7d71-4e06-a305-a6295dafea68-1772201803425/node_modules/packages/actor-query-parse-sparql"
 
 "@manypkg/find-root@^3.1.0":
   version "3.1.0"

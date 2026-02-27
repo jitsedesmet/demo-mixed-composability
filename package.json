@@ -5,11 +5,8 @@
   "type": "module",
   "scripts": {
     "setup": "svelte-kit sync",
-    "build:engine": "cp -r comunica/engines/config-query-sparql/config node_modules/@local/config-query-sparql/ && cd comunica && yarn install && cd - && cp comunica/engines/query-sparql/engine-default.js node_modules/@local/query-sparql/ && cp comunica/engines/query-sparql/lib/*.js comunica/engines/query-sparql/lib/*.js.map node_modules/@local/query-sparql/lib/ && cp comunica/packages/actor-query-parse-sparql/lib/*.js comunica/packages/actor-query-parse-sparql/lib/*.js.map node_modules/@local/actor-query-parse-sparql/lib/ && cp comunica/packages/actor-function-factory-term-adjust/lib/*.js comunica/packages/actor-function-factory-term-adjust/lib/*.js.map node_modules/@local/actor-function-factory-term-adjust/lib/ && cp -r comunica/engines/config-query-sparql/components node_modules/@local/config-query-sparql/ && rm -rf node_modules/.vite",
-    "predev": "yarn run build:engine",
     "dev": "vite dev",
     "clean": "git clean -dfx",
-    "prebuild": "yarn run build:engine",
     "build": "vite build",
     "preview": "vite preview",
     "prepare": "svelte-kit sync || echo ''",
@@ -18,10 +15,10 @@
     "lint": "eslint ."
   },
   "devDependencies": {
-    "@local/config-query-sparql": "file:comunica/engines/config-query-sparql",
-    "@local/actor-query-parse-sparql": "file:comunica/packages/actor-query-parse-sparql",
-    "@local/actor-function-factory-term-adjust": "file:comunica/packages/actor-function-factory-term-adjust",
-    "@local/query-sparql": "file:comunica/engines/query-sparql",
+    "@local/config-query-sparql": "link:comunica/engines/config-query-sparql",
+    "@local/actor-query-parse-sparql": "link:comunica/packages/actor-query-parse-sparql",
+    "@local/actor-function-factory-term-adjust": "link:comunica/packages/actor-function-factory-term-adjust",
+    "@local/query-sparql": "link:comunica/engines/query-sparql",
     "@eslint/compat": "^2.0.2",
     "@eslint/js": "^9.18.0",
     "@rdfjs/types": "^2.0.1",
@@ -45,9 +42,6 @@
     "vite": "^7.3.1"
   },
   "packageManager": "yarn@1.22.22+sha512.a6b2f7906b721bba3d67d4aff083df04dad64c399707841b7acf00f6b133b7ac24255f2652fa22ae3534329dc6180534e98d17432037ff6fd140556e2bb3137e",
-  "resolutions": {
-    "@local/config-query-sparql": "file:comunica/engines/config-query-sparql"
-  },
   "dependencies": {
     "highlight.js": "^11.11.1"
   }
