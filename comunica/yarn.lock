@@ -4960,8 +4960,8 @@
   version "5.0.0"
   dependencies:
     "@comunica/config-query-sparql" "~5.0.0"
-    "@local/actor-function-factory-term-adjust" "file:../../../../.cache/yarn/v6/npm-@local-config-query-sparql-5.0.0-551cbe31-f1cf-49cf-a343-6b48d00eea46-1772184587040/node_modules/packages/actor-function-factory-term-adjust"
-    "@local/actor-query-parse-sparql" "file:../../../../.cache/yarn/v6/npm-@local-config-query-sparql-5.0.0-551cbe31-f1cf-49cf-a343-6b48d00eea46-1772184587040/node_modules/packages/actor-query-parse-sparql"
+    "@local/actor-function-factory-term-adjust" "file:../../../../../.cache/yarn/v6/npm-@local-config-query-sparql-5.0.0-9fb4e7e8-3ae6-4b5d-b6f6-6eee137a4928-1772186640315/node_modules/packages/actor-function-factory-term-adjust"
+    "@local/actor-query-parse-sparql" "file:../../../../../.cache/yarn/v6/npm-@local-config-query-sparql-5.0.0-9fb4e7e8-3ae6-4b5d-b6f6-6eee137a4928-1772186640315/node_modules/packages/actor-query-parse-sparql"
 
 "@manypkg/find-root@^3.1.0":
   version "3.1.0"
@@ -5728,6 +5728,16 @@
     "@traqula/rules-sparql-1-1" "^1.0.3"
     "@traqula/rules-sparql-1-2" "^1.0.3"
 
+"@traqula/parser-sparql-1-1-adjust@^1.0.3":
+  version "1.0.3"
+  resolved "https://registry.yarnpkg.com/@traqula/parser-sparql-1-1-adjust/-/parser-sparql-1-1-adjust-1.0.3.tgz#c4784921efedd61e385ea6461f3ecafa2b380932"
+  integrity sha512-WG6bV1A7qHns+A/opftfhgugZ4IJZ7orIxfWlTyvl6o4fkpYRHguCEMBOnXveoxcUqdmHtlQ1C0EJy2kiGo2Fg==
+  dependencies:
+    "@traqula/core" "^1.0.3"
+    "@traqula/parser-sparql-1-1" "^1.0.3"
+    "@traqula/rules-sparql-1-1" "^1.0.3"
+    "@traqula/rules-sparql-1-1-adjust" "^1.0.3"
+
 "@traqula/parser-sparql-1-1@^1.0.3":
   version "1.0.3"
   resolved "https://registry.yarnpkg.com/@traqula/parser-sparql-1-1/-/parser-sparql-1-1-1.0.3.tgz#55d8c9d758d5f496c017cdef3eb63cd824c5cba0"
@@ -5746,6 +5756,14 @@
     "@traqula/rules-sparql-1-1" "^1.0.3"
     "@traqula/rules-sparql-1-2" "^1.0.3"
     rdf-data-factory "^2.0.1"
+
+"@traqula/rules-sparql-1-1-adjust@^1.0.3":
+  version "1.0.3"
+  resolved "https://registry.yarnpkg.com/@traqula/rules-sparql-1-1-adjust/-/rules-sparql-1-1-adjust-1.0.3.tgz#9eaff6ced1fdd88e0ee204c0721cf75caf7b7c9a"
+  integrity sha512-7qJHk9NIwNJh38B2YmNF7PsVbFsFZLHlnjYKOFsatjRflcCBXkzg2NnLUgtnExtgpcW3Wt2/2BNbaKYUCVv7Fg==
+  dependencies:
+    "@traqula/core" "^1.0.3"
+    "@traqula/rules-sparql-1-1" "^1.0.3"
 
 "@traqula/rules-sparql-1-1@^1.0.3":
   version "1.0.3"
