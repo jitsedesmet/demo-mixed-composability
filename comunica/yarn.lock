@@ -4945,6 +4945,18 @@
     "@comunica/bus-function-factory" "^5.1.3"
     "@comunica/utils-expression-evaluator" "^5.1.3"
 
+"@local/actor-query-operation-lateral@file:packages/actor-query-operation-lateral":
+  version "5.1.3"
+  dependencies:
+    "@comunica/bus-query-operation" "^5.1.3"
+    "@comunica/bus-rdf-metadata-accumulate" "^5.1.3"
+    "@comunica/core" "^5.1.3"
+    "@comunica/types" "^5.1.3"
+    "@comunica/utils-algebra" "^5.1.3"
+    "@comunica/utils-metadata" "^5.1.3"
+    "@comunica/utils-query-operation" "^5.1.3"
+    asynciterator "^3.10.0"
+
 "@local/actor-query-parse-sparql@file:packages/actor-query-parse-sparql":
   version "5.1.3"
   dependencies:
@@ -4960,8 +4972,9 @@
   version "5.0.0"
   dependencies:
     "@comunica/config-query-sparql" "~5.0.0"
-    "@local/actor-function-factory-term-adjust" "file:../../../../.cache/yarn/v6/npm-@local-config-query-sparql-5.0.0-ba6bbac7-7d71-4e06-a305-a6295dafea68-1772201803425/node_modules/packages/actor-function-factory-term-adjust"
-    "@local/actor-query-parse-sparql" "file:../../../../.cache/yarn/v6/npm-@local-config-query-sparql-5.0.0-ba6bbac7-7d71-4e06-a305-a6295dafea68-1772201803425/node_modules/packages/actor-query-parse-sparql"
+    "@local/actor-function-factory-term-adjust" "file:../../../../.cache/yarn/v6/npm-@local-config-query-sparql-5.0.0-b8f87b52-1880-4fd6-85de-506080066639-1772209717139/node_modules/packages/actor-function-factory-term-adjust"
+    "@local/actor-query-operation-lateral" "file:../../../../.cache/yarn/v6/npm-@local-config-query-sparql-5.0.0-b8f87b52-1880-4fd6-85de-506080066639-1772209717139/node_modules/packages/actor-query-operation-lateral"
+    "@local/actor-query-parse-sparql" "file:../../../../.cache/yarn/v6/npm-@local-config-query-sparql-5.0.0-b8f87b52-1880-4fd6-85de-506080066639-1772209717139/node_modules/packages/actor-query-parse-sparql"
 
 "@manypkg/find-root@^3.1.0":
   version "3.1.0"
