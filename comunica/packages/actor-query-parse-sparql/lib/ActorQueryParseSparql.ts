@@ -37,7 +37,6 @@ export class ActorQueryParseSparql extends ActorQueryParse {
     const dataFactory: ComunicaDataFactory = action.context.getSafe(KeysInitQuery.dataFactory);
     const astFactory = new AstFactory();
     const parser = action.context.get(parserKey) ?? this.parser;
-    const myToAlgebra = action.context.get(toAlgebraKey) ?? toAlgebra;
     const parsedSyntax = parser.parse(action.query, {
       prefixes: this.prefixes,
       baseIRI: action.baseIRI,
@@ -51,15 +50,19 @@ export class ActorQueryParseSparql extends ActorQueryParse {
         }
       }
     }
+
+    const myToAlgebra = action.context.get(toAlgebraKey) ?? toAlgebra;
+    const operation = myToAlgebra(parsedSyntax, {
+      quads: true,
+      prefixes: this.prefixes,
+      blankToVariable: true,
+      baseIRI: action.baseIRI,
+      dataFactory,
+    });
+    // Console.log(operation);
     return {
       baseIRI,
-      operation: myToAlgebra(parsedSyntax, {
-        quads: true,
-        prefixes: this.prefixes,
-        blankToVariable: true,
-        baseIRI: action.baseIRI,
-        dataFactory,
-      }),
+      operation,
     };
   }
 }
