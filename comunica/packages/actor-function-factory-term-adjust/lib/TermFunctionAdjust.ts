@@ -1,14 +1,20 @@
 import { TermFunctionBase } from '@comunica/bus-function-factory';
 import type { IDateTimeRepresentation, IDurationRepresentation, ITimeZoneRepresentation } from '@comunica/types';
-import type { DayTimeDurationLiteral } from '@comunica/utils-expression-evaluator';
+import type {
+  DayTimeDurationLiteral,
+} from '@comunica/utils-expression-evaluator';
 import {
+  defaultedDateTimeRepresentation,
+
   toUTCDate,
   defaultedDurationRepresentation,
   addDurationToDateTime,
   DateTimeLiteral,
   declare,
   TypeURL,
+
   DateLiteral,
+
   TimeLiteral,
 } from '@comunica/utils-expression-evaluator';
 
@@ -60,6 +66,33 @@ function elapsedDuration(
   };
 }
 
+function adjustDateTime([ date, timezone ]: [DateTimeLiteral, DayTimeDurationLiteral]): DateTimeLiteral {
+  const typeDate = date.typedValue;
+  const typeDur = timezone.typedValue;
+  if (typeDate.zoneMinutes ?? typeDate.zoneHours === undefined) {
+    return new MyDateTimeLiteral({
+      ...typeDate,
+      zoneHours: typeDur.hours,
+      zoneMinutes: typeDur.minutes,
+    });
+  }
+  // Take the timezone from the dateTime, subtract it from the dateTime, add the new timezone
+  const timeDif = defaultedDurationRepresentation(elapsedDuration(
+    defaultedDurationRepresentation(typeDur),
+    defaultedDurationRepresentation({
+      hours: typeDate.zoneHours,
+      minutes: typeDate.zoneMinutes,
+    }),
+    { zoneHours: 0, zoneMinutes: 0 },
+  ));
+  const firstOp = addDurationToDateTime(typeDate, timeDif);
+  return new MyDateTimeLiteral({
+    ...firstOp,
+    zoneHours: typeDur.hours,
+    zoneMinutes: typeDur.minutes,
+  });
+}
+
 /**
  * https://github.com/w3c/sparql-dev/blob/main/SEP/SEP-0002/sep-0002.md
  * https://www.w3.org/TR/xpath-functions/#func-adjust-dateTime-to-timezone
@@ -73,41 +106,41 @@ export class TermFunctionAdjust extends TermFunctionBase {
         // ExprEval.context.getSafe(KeysExpressionEvaluator.defaultTimeZone)
         .set(
           [ TypeURL.XSD_DATE_TIME, TypeURL.XSD_DAY_TIME_DURATION ],
-          () =>
-            ([ date, timezone ]: [DateTimeLiteral, DayTimeDurationLiteral]) => {
-              const typeDate = date.typedValue;
-              const typeDur = timezone.typedValue;
-              if (typeDate.zoneMinutes ?? typeDate.zoneHours === undefined) {
-                return new MyDateTimeLiteral({
-                  ...typeDate,
-                  zoneHours: typeDur.hours,
-                  zoneMinutes: typeDur.minutes,
-                });
-              }
-              // Take the timezone from the dateTime, subtract it from the dateTime, add the new timezone
-              const timeDif = defaultedDurationRepresentation(elapsedDuration(
-                defaultedDurationRepresentation(typeDur),
-                defaultedDurationRepresentation({
-                  hours: typeDate.zoneHours,
-                  minutes: typeDate.zoneMinutes,
-                }),
-                { zoneHours: 0, zoneMinutes: 0 },
-              ));
-              const firstOp = addDurationToDateTime(typeDate, timeDif);
-              return new MyDateTimeLiteral({
-                ...firstOp,
-                zoneHours: typeDur.hours,
-                zoneMinutes: typeDur.minutes,
-              });
-            },
+          () => adjustDateTime,
         ).set(
           [ TypeURL.XSD_DATE, TypeURL.XSD_DAY_TIME_DURATION ],
-          () => ([ date, timezone ]: [DateLiteral, DayTimeDurationLiteral]) =>
-            new DateLiteral({ ...date.typedValue }),
+          () => ([ date, timezone ]: [DateLiteral, DayTimeDurationLiteral]) => {
+            const asDateTime = new DateTimeLiteral(defaultedDateTimeRepresentation(date.typedValue));
+            const asTimedDate = adjustDateTime([ asDateTime, timezone ]);
+            const tv = asTimedDate.typedValue;
+            // TODO: can introduce this trim function upstream
+            return new DateLiteral({
+              day: tv.day,
+              month: tv.month,
+              year: tv.year,
+              zoneHours: tv.zoneHours,
+              zoneMinutes: tv.zoneMinutes,
+            });
+          },
         ).set(
           [ TypeURL.XSD_TIME, TypeURL.XSD_DAY_TIME_DURATION ],
-          () => ([ date, timezone ]: [TimeLiteral, DayTimeDurationLiteral]) =>
-            new TimeLiteral({ ...date.typedValue }),
+          () => ([ time, timezone ]: [TimeLiteral, DayTimeDurationLiteral]) => {
+            const asDateTime = new DateTimeLiteral({
+              ...time.typedValue,
+              year: 1972,
+              month: 12,
+              day: 31,
+            });
+            const asTimedDate = adjustDateTime([ asDateTime, timezone ]);
+            const tv = asTimedDate.typedValue;
+            return new TimeLiteral({
+              hours: tv.hours,
+              minutes: tv.minutes,
+              seconds: tv.seconds,
+              zoneHours: tv.zoneHours,
+              zoneMinutes: tv.zoneMinutes,
+            });
+          },
         ).collect(),
     });
   }
