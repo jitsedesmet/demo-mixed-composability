@@ -8,7 +8,7 @@ function buildEnginePlugin() {
 		name: 'build-engine',
 		config() {
 			try {
-				execSync('cd comunica && yarn install && cd ..', { stdio: 'inherit' });
+				execSync('cd comunica && yarn install --production=false && cd ..', { stdio: 'inherit' });
 			} catch (e) {
 				throw new Error(`build:engine failed: ${e instanceof Error ? e.message : e}`);
 			}
@@ -18,6 +18,9 @@ function buildEnginePlugin() {
 
 export default defineConfig({
 	plugins: [buildEnginePlugin(), sveltekit()],
+	resolve: {
+		preserveSymlinks: true
+	},
 	server: {
 		fs: {
 			allow: [fileURLToPath(new URL('./comunica', import.meta.url))]
