@@ -4939,6 +4939,12 @@
     yargs "17.7.2"
     yargs-parser "21.1.1"
 
+"@local/actor-function-factory-term-adjust@file:packages/actor-function-factory-term-adjust":
+  version "5.1.3"
+  dependencies:
+    "@comunica/bus-function-factory" "^5.1.3"
+    "@comunica/utils-expression-evaluator" "^5.1.3"
+
 "@local/actor-query-parse-sparql@file:packages/actor-query-parse-sparql":
   version "5.1.3"
   dependencies:
@@ -4954,7 +4960,8 @@
   version "5.0.0"
   dependencies:
     "@comunica/config-query-sparql" "~5.0.0"
-    "@local/actor-query-parse-sparql" "file:../../../../../.cache/yarn/v6/npm-@local-config-query-sparql-5.0.0-566ded2b-9ae4-4758-90f1-6c22bf142f4e-1772123390504/node_modules/packages/actor-query-parse-sparql"
+    "@local/actor-function-factory-term-adjust" "file:../../../../.cache/yarn/v6/npm-@local-config-query-sparql-5.0.0-551cbe31-f1cf-49cf-a343-6b48d00eea46-1772184587040/node_modules/packages/actor-function-factory-term-adjust"
+    "@local/actor-query-parse-sparql" "file:../../../../.cache/yarn/v6/npm-@local-config-query-sparql-5.0.0-551cbe31-f1cf-49cf-a343-6b48d00eea46-1772184587040/node_modules/packages/actor-query-parse-sparql"
 
 "@manypkg/find-root@^3.1.0":
   version "3.1.0"

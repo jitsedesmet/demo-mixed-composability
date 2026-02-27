@@ -11,6 +11,7 @@
     "ccqs:config/expression-evaluator-factory/actors.json",
     "ccqs:config/expression-evaluator-factory/mediators.json",
     "ccqs:config/function-factory/actors.json",
+    "https://linkedsoftwaredependencies.org/bundles/npm/@local/config-query-sparql/^5.0.0/config/function-factory/actors.json",
     "ccqs:config/function-factory/mediators.json",
     "ccqs:config/hash-bindings/actors.json",
     "ccqs:config/hash-bindings/mediators.json",
