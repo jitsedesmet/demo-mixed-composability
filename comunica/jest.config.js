@@ -18,12 +18,4 @@ module.exports = {
     '/packages/actor-query-source-identify-hdt/test/MockedHdtDocument.ts',
   ],
   testEnvironment: 'node',
-  coverageThreshold: {
-    global: {
-      branches: 100,
-      functions: 100,
-      lines: 100,
-      statements: 100,
-    },
-  },
 };

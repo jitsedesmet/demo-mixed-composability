@@ -43,7 +43,9 @@
     "browser-profile": "node \"../../node_modules/webpack/bin/webpack.js\" --mode production --profile --json > stats.json && node \"../../node_modules/.bin/webpack-bundle-analyzer\" stats.json && rm stats.json"
   },
   "dependencies": {
-    "@local/config-query-sparql": "^5.0.0",
+    "@local/config-query-sparql": "file:../config-query-sparql",
+    "@local/actor-query-parse-sparql": "file:../../packages/actor-query-parse-sparql",
+    "@local/actor-function-factory-term-adjust": "file:../../packages/actor-function-factory-term-adjust",
 
     "@comunica/actor-bindings-aggregator-factory-average": "^5.1.3",
     "@comunica/actor-bindings-aggregator-factory-count": "^5.1.3",
@@ -206,7 +208,6 @@
     "@comunica/actor-query-operation-update-load": "^5.1.3",
     "@comunica/actor-query-operation-values": "^5.1.3",
     "@comunica/actor-query-parse-graphql": "^5.1.3",
-    "@comunica/actor-query-parse-sparql": "^5.1.3",
     "@comunica/actor-query-process-explain-logical": "^5.1.3",
     "@comunica/actor-query-process-explain-parsed": "^5.1.3",
     "@comunica/actor-query-process-explain-physical": "^5.1.3",

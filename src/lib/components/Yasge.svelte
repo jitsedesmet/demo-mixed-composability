@@ -109,6 +109,7 @@
 </script>
 
 
+<div use:yasge={{ query }} class="yasge"></div>
 {#if error}
     <div class="myError">
         <span>
@@ -121,7 +122,6 @@
         </button>
     </div>
 {/if}
-<div use:yasge={{ query }} class="yasge"></div>
 
 <style>
     :global {
@@ -131,13 +131,15 @@
         display: flex;
         padding: 0.25em;
         background: rgba(255, 65, 54, 0.66);
-        border-radius: 0.25em 0.25em 0 0;
+        border-radius: 0.25em;
         color: black;
     }
     .myError span {
         flex: 1;
         padding: 0 0 0 10px;
         align-self: center;
+        white-space: pre-wrap;
+        font-family: monospace;
     }
     .myError button {
         padding: 0 10px;

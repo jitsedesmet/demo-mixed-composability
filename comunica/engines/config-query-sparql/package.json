@@ -30,6 +30,8 @@
     "build:components": "componentsjs-generator"
   },
   "dependencies": {
+    "@local/actor-query-parse-sparql": "file:../../packages/actor-query-parse-sparql",
+    "@local/actor-function-factory-term-adjust": "file:../../packages/actor-function-factory-term-adjust",
     "@comunica/config-query-sparql": "~5.0.0"
   }
 }

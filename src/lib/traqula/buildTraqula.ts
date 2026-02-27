@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { LexerBuilder, ParserBuilder, GeneratorBuilder, IndirBuilder } from '@traqula/core';
-import { lex as lex11 } from '@traqula/rules-sparql-1-1';
+import { lex as lex11, MinimalSparqlParser } from '@traqula/rules-sparql-1-1';
 import { sparql11ParserBuilder } from '@traqula/parser-sparql-1-1';
 import { sparql11GeneratorBuilder } from '@traqula/generator-sparql-1-1';
 import { toAlgebra11Builder, toAst11Builder } from '@traqula/algebra-sparql-1-1';
@@ -8,6 +8,8 @@ import type { FullTraqulaConfig } from './types';
 import { config12 } from './12Rules';
 import { configAdjust } from './adjustRules';
 import { configLateral } from './lateral/lateralRules';
+import {completeParseContext, type SparqlQuery} from "@traqula/rules-sparql-1-2";
+import {createAlgebraContext, type ContextConfigs} from "@traqula/algebra-transformations-1-2";
 
 const OPTION_TO_CONFIG: Record<string, FullTraqulaConfig> = {
   'SPARQL 1.2': config12,
@@ -221,7 +223,10 @@ export function buildParser(activeConfigs: ActiveConfig[], lexer: LexerBuilder) 
       builder = (builder as any).deleteRule(rule);
     }
   }
-  return (builder as any).build({ tokenVocabulary: lexer.tokenVocabulary });
+  return new MinimalSparqlParser(
+    (builder as any).build({ tokenVocabulary: lexer.tokenVocabulary, lexerConfig: { positionTracking: 'full' } }),
+    completeParseContext({})
+  );
 }
 
 export function buildGenerator(activeConfigs: ActiveConfig[]) {
@@ -247,7 +252,11 @@ export function buildToAlgebra(activeConfigs: ActiveConfig[]) {
       builder = (builder as any).patchRule(rule);
     }
   }
-  return (builder as any).build();
+  const transformer = (builder as any).build();
+  return  (query: SparqlQuery, options: ContextConfigs) => {
+    const c = createAlgebraContext(options);
+    return transformer.translateQuery(c, query, options.quads, options.blankToVariable);
+  }
 }
 
 export function buildToAst(activeConfigs: ActiveConfig[]) {
