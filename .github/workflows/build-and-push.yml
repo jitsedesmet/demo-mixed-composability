@@ -10,7 +10,6 @@ jobs:
     uses: ./.github/workflows/build-might-push.yml
     with:
       push: true
-      tag: development
     permissions:
       contents: read
       packages: write

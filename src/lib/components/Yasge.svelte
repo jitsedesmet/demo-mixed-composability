@@ -138,6 +138,8 @@
         flex: 1;
         padding: 0 0 0 10px;
         align-self: center;
+        white-space: pre-wrap;
+        font-family: monospace;
     }
     .myError button {
         padding: 0 10px;
