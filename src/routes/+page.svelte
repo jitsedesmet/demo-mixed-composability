@@ -6,7 +6,8 @@
   import CodeBlock from "$lib/components/CodeBlock.svelte";
   import SourceSelector from "$lib/components/SourceSelector.svelte";
   import type {Bindings} from "@rdfjs/types";
-  import { getQueryParam } from "$lib/helpers.svelte";
+  import { getQueryParam, alterQuery, removeQuery } from "$lib/helpers.svelte";
+  import { replaceState } from "$app/navigation";
   import {
     getActiveConfigs,
     generateLexerCode,
@@ -18,14 +19,28 @@
 
   // Parser composition toggles
   const compositionOptions = ['SPARQL 1.2', 'Built-in Adjust', 'Lateral operation'];
-  let parserComposition = $state(new Set<string>());
-  let engineComposition = $state(new Set<string>());
+
+  function parseButtonList(param: string | null): Set<string> {
+    if (!param) return new Set<string>();
+    return new Set(param.split(',').filter(item => item));
+  }
+
+  function syncButtonState(composition: Set<string>, key: string): void {
+    const list = [...composition];
+    replaceState(list.length === 0 ? removeQuery(key) : alterQuery(key, list.join(',')), {});
+  }
+
+  let parserComposition = $state(parseButtonList(getQueryParam('parserConfig')));
+  let engineComposition = $state(parseButtonList(getQueryParam('engineConfig')));
 
   function toggleOption(current: Set<string>, opt: string): Set<string> {
     const next = new Set(current);
     if (next.has(opt)) next.delete(opt); else next.add(opt);
     return next;
   }
+
+  $effect(() => { syncButtonState(parserComposition, 'parserConfig'); });
+  $effect(() => { syncButtonState(engineComposition, 'engineConfig'); });
 
   let parserConfigs = $derived(getActiveConfigs(parserComposition));
   let lexerCode = $derived(generateLexerCode(parserConfigs));

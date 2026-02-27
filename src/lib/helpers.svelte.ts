@@ -6,6 +6,12 @@ export function alterQuery(key: string, value: string): string {
   return url.search;
 }
 
+export function removeQuery(key: string): string {
+  const url = new URL(page.url);
+  url.searchParams.delete(key);
+  return url.search;
+}
+
 export function getQueryParam(key: string): string | null {
   return page.url.searchParams.get(key);
 }
