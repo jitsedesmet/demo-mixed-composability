@@ -1,6 +1,7 @@
 import { sveltekit } from '@sveltejs/kit/vite';
 import { defineConfig } from 'vite';
 import { execSync } from 'child_process';
+import { fileURLToPath } from 'url';
 
 function buildEnginePlugin() {
 	return {
@@ -16,5 +17,10 @@ function buildEnginePlugin() {
 }
 
 export default defineConfig({
-	plugins: [buildEnginePlugin(), sveltekit()]
+	plugins: [buildEnginePlugin(), sveltekit()],
+	server: {
+		fs: {
+			allow: [fileURLToPath(new URL('./comunica', import.meta.url))]
+		}
+	}
 });
