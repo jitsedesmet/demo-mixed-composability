@@ -4,7 +4,7 @@ import { ActionContext, Bus } from '@comunica/core';
 import type { IActionContext } from '@comunica/types';
 import { AlgebraFactory } from '@comunica/utils-algebra';
 import { DataFactory } from 'rdf-data-factory';
-import { ActorQueryParseSparql } from '..';
+import { ActorQueryParseSparql } from '../lib';
 import '@comunica/utils-jest';
 
 const DF = new DataFactory();
@@ -111,6 +111,15 @@ describe('ActorQueryParseSparql', () => {
           DF.variable('b'),
         ) ]), [ DF.variable('a'), DF.variable('b') ]),
       });
+    });
+
+    it('should run with a PREFIX declaration', async() => {
+      const result = await actor.run({
+        query: 'PREFIX ex: <http://example.org/> SELECT * WHERE { ?a a ?b }',
+        context,
+      });
+      expect(result.baseIRI).toBeUndefined();
+      expect(result.operation).toBeTruthy();
     });
   });
 });
