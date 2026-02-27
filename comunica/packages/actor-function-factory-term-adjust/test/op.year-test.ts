@@ -2,7 +2,7 @@ import { toAlgebra } from '@traqula/algebra-sparql-1-2';
 import { Parser } from '@traqula/parser-sparql-1-1-adjust';
 import { ActorFunctionFactoryTermAdjust } from '../lib';
 import { runFuncTestTable } from './util';
-import { dateTyped, dateTimeTyped, dayTimeDurationTyped, timeTyped } from './util/Aliases';
+import { dateTimeTyped, dayTimeDurationTyped } from './util/Aliases';
 import { Notation } from './util/TestTable';
 
 describe('evaluation of \'ADJUST\'', () => {
@@ -16,9 +16,21 @@ describe('evaluation of \'ADJUST\'', () => {
     toAlgebraParse: query => toAlgebra(parser.parse(query)),
     operation: 'ADJUST',
     testTable: `
-    '${dateTyped('2010-06-21Z')}' '${dayTimeDurationTyped('-PT10H')}' = '${dateTyped('2010-06-21Z')}'
-    '${dateTimeTyped('2010-06-21T10:00:00Z')}' '${dayTimeDurationTyped('-PT10H')}' = '${dateTimeTyped('2010-06-21T10:00:00Z')}'
-    '${timeTyped('10:00:00Z')}' '${dayTimeDurationTyped('-PT10H')}' = '${timeTyped('10:00:00Z')}'
+    '${dateTimeTyped('2002-03-07T10:00:00')}' '${dayTimeDurationTyped('-PT10H')}' = '${dateTimeTyped('2002-03-07T10:00:00-10:00')}'
+    '${dateTimeTyped('2002-03-07T10:00:00-07:00')}' '${dayTimeDurationTyped('-PT10H')}' = '${dateTimeTyped('2002-03-07T07:00:00-10:00')}'
+    '${dateTimeTyped('2002-03-07T10:00:00-07:00')}' '${dayTimeDurationTyped('PT10H')}' = '${dateTimeTyped('2002-03-08T03:00:00+10:00')}'
+    '${dateTimeTyped('2002-03-07T00:00:00+01:00')}' '${dayTimeDurationTyped('-PT8H')}' = '${dateTimeTyped('2002-03-06T15:00:00-08:00')}'
   `,
+
+    /**
+     *     '${dateTyped('2002-03-07')}' '${dayTimeDurationTyped('-PT10H')}' = '${dateTyped('2002-03-07-10:00')}'
+     *     '${dateTyped('2002-03-07-07:00')}' '${dayTimeDurationTyped('-PT10H')}' = '${dateTyped('2002-03-06-10:00')}'
+     *
+     *     '${timeTyped('10:00:00')}' '${dayTimeDurationTyped('-PT10H')}' = '${timeTyped('10:00:00-10:00')}'
+     *
+     *     '${timeTyped('10:00:00')}' '${dayTimeDurationTyped('-PT10H')}' = '${timeTyped('10:00:00-10:00')}'
+     *     '${timeTyped('10:00:00-07:00')}' '${dayTimeDurationTyped('-PT10H')}' = '${timeTyped('07:00:00-10:00')}'
+     *     '${timeTyped('10:00:00-07:00')}' '${dayTimeDurationTyped('PT10H')}' = '${timeTyped('03:00:00+10:00')}'
+     */
   });
 });
