@@ -6,20 +6,36 @@
   import CodeBlock from "$lib/components/CodeBlock.svelte";
   import SourceSelector from "$lib/components/SourceSelector.svelte";
   import type {Bindings} from "@rdfjs/types";
-  import { getQueryParam } from "$lib/helpers.svelte";
+  import {alterQuery, getQueryParam, removeQuery} from "$lib/helpers.svelte";
+  import {goto} from "$app/navigation";
   import {
-    getActiveConfigs,
+    generateGeneratorCode,
     generateLexerCode,
     generateParserCode,
-    generateGeneratorCode,
     generateToAlgebraCode,
     generateToAstCode,
+    getActiveConfigs,
   } from "$lib/traqula/buildTraqula";
 
   // Parser composition toggles
   const compositionOptions = ['SPARQL 1.2', 'Built-in Adjust', 'Lateral operation'];
-  let parserComposition = $state(new Set<string>());
-  let engineComposition = $state(new Set<string>());
+
+  function parseButtonList(param: string | null): Set<string> {
+    if (!param) return new Set<string>();
+    return new Set(param.split(',').filter(item => item));
+  }
+
+  function syncButtonState(composition: Set<string>, key: string): void {
+    const list = [...composition];
+    const newIri = list.length === 0 ? removeQuery(key) : alterQuery(key, list.join(','))
+    console.log(newIri, list);
+    goto(newIri, {
+      replaceState: true,
+    });
+  }
+
+  let parserComposition = $state(parseButtonList(getQueryParam('parserConfig')));
+  let engineComposition = $state(parseButtonList(getQueryParam('engineConfig')));
 
   function toggleOption(current: Set<string>, opt: string): Set<string> {
     const next = new Set(current);
@@ -91,7 +107,10 @@ WHERE {
           label="Parser:"
           options={compositionOptions}
           selected={parserComposition}
-          ontoggle={(opt) => (parserComposition = toggleOption(parserComposition, opt))}
+          ontoggle={(opt) => {
+            parserComposition = toggleOption(parserComposition, opt)
+            syncButtonState(parserComposition, 'parserConfig')
+          }}
         />
 
         <TabPanel
@@ -128,7 +147,10 @@ WHERE {
           label="Engine:"
           options={compositionOptions}
           selected={engineComposition}
-          ontoggle={(opt) => (engineComposition = toggleOption(engineComposition, opt))}
+          ontoggle={(opt) => {
+            engineComposition = toggleOption(engineComposition, opt)
+            syncButtonState(engineComposition, 'engineConfig')
+          }}
         />
 
         <TabPanel
