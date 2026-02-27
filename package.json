@@ -5,7 +5,6 @@
   "type": "module",
   "scripts": {
     "setup": "svelte-kit sync",
-    "build:engine": "cd comunica && yarn install",
     "dev": "vite dev",
     "clean": "git clean -dfx",
     "build": "vite build",

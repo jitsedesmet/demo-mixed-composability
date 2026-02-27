@@ -7,7 +7,7 @@ function buildEnginePlugin() {
 		name: 'build-engine',
 		config() {
 			try {
-				execSync('yarn run build:engine', { stdio: 'inherit' });
+				execSync('cd comunica && yarn install && cd ..', { stdio: 'inherit' });
 			} catch (e) {
 				throw new Error(`build:engine failed: ${e instanceof Error ? e.message : e}`);
 			}
