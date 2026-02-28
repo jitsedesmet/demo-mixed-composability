@@ -1,7 +1,6 @@
 {
   "@context": [
     "https://linkedsoftwaredependencies.org/bundles/npm/@comunica/runner/^5.0.0/components/context.jsonld",
-
     "https://linkedsoftwaredependencies.org/bundles/npm/@comunica/actor-function-factory-term-subtraction/^5.0.0/components/context.jsonld"
   ],
   "@id": "urn:comunica:default:Runner",
@@ -9,7 +8,10 @@
   "actors": [
     {
       "@id": "urn:comunica:default:function-factory/actors#term-function-subtraction",
-      "@type": "ActorFunctionFactoryTermSubtraction"
+      "@type": "ActorFunctionFactoryTermSubtraction",
+      "bus": {
+        "@id": "urn:comunica:default:function-factory/bus#selective"
+      }
     }
   ]
 }
