@@ -3,8 +3,9 @@ import type {
   IActionFunctionFactory,
   IActorFunctionFactoryOutput,
 } from '@comunica/bus-function-factory';
+import { BusFunctionFactory } from '@comunica/bus-function-factory';
 import type { IActorReply, IActorTest, IBusArgs } from '@comunica/core';
-import { ActionContextKey, BusIndexed } from '@comunica/core';
+import { ActionContextKey } from '@comunica/core';
 
 export const functionFactoryDeactivateKey = new ActionContextKey<string[]>('@local/bus-function-factory:deactivate');
 
@@ -14,14 +15,9 @@ export const functionFactoryDeactivateKey = new ActionContextKey<string[]>('@loc
  * The implementation differs. In BusIndexed, each actor is indexed only once.
  * Here, a single actor can be indexed multiple times.
  */
-export class BusFunctionFactorySelective
-  extends BusIndexed<ActorFunctionFactory, IActionFunctionFactory, IActorTest, IActorFunctionFactoryOutput> {
+export class BusFunctionFactorySelective extends BusFunctionFactory {
   public constructor(args: IBusArgs) {
-    super({
-      ...args,
-      actorIdentifierFields: [ 'functionNames' ],
-      actionIdentifierFields: [ 'functionName' ],
-    });
+    super(args);
   }
 
   public override publish(action: IActionFunctionFactory):
