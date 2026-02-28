@@ -16,7 +16,7 @@
   import {alterQuery} from "$lib/helpers.svelte";
   import {replaceState} from "$app/navigation";
   import {parserKey, toAlgebraKey} from "@local/actor-query-parse-sparql";
-  import {lateralSupportKey} from "../../../comunica/packages/actor-query-operation-lateral";
+  import {lateralSupportKey} from "@local/actor-query-operation-lateral";
   import {adjustSupportKey} from "@local/actor-function-factory-term-adjust";
 
   interface Props {
