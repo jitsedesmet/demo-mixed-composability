@@ -180,7 +180,7 @@ WHERE {
         <h2>Query</h2>
         <span class="source-label">Choose datasources:</span>
         <SourceSelector bind:selected={selectedSources} />
-        <Yasge bind:query bind:bindings bind:queryDone bind:queryRunning bind:queryStartTime {parserComposition} sources={selectedSources} />
+        <Yasge bind:query bind:bindings bind:queryDone bind:queryRunning bind:queryStartTime {parserComposition} {engineComposition} sources={selectedSources} />
       </section>
 
       <section class="results-section">

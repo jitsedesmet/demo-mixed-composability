@@ -16,7 +16,7 @@
   import {alterQuery} from "$lib/helpers.svelte";
   import {replaceState} from "$app/navigation";
   import {parserKey, toAlgebraKey} from "@local/actor-query-parse-sparql";
-  import {lateralSupportKey} from "../../../comunica/packages/actor-query-operation-lateral";
+  import {lateralSupportKey} from "@local/actor-query-operation-lateral";
   import {adjustSupportKey} from "@local/actor-function-factory-term-adjust";
 
   interface Props {
@@ -26,6 +26,7 @@
     queryRunning?: boolean;
     queryStartTime?: number;
     parserComposition?: Set<string>;
+    engineComposition?: Set<string>;
     sources?: string[];
   }
   let {
@@ -35,6 +36,7 @@
     queryRunning = $bindable(false),
     queryStartTime = $bindable(0),
     parserComposition = $bindable(new Set<string>()),
+    engineComposition = $bindable(new Set<string>()),
     sources = ["https://fragments.dbpedia.org/2016-04/en"],
   }: Props = $props();
   let error = $state<string | undefined>(undefined);
@@ -75,10 +77,8 @@
           toAst: buildToAst(configs) as any,
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
           [toAlgebraKey.name]: buildToAlgebra(configs) as any,
-          // TODO: check whether it is active in the engine configuration of the UI
-          [lateralSupportKey.name]: true,
-          // TODO: check whether it is active in the engine configuration of the UI
-          [adjustSupportKey.name]: true,
+          [lateralSupportKey.name]: engineComposition.has('Lateral operation'),
+          [adjustSupportKey.name]: engineComposition.has('Built-in Adjust'),
         });
         bindingStream.on('data', (binding: Bindings) => {
           bindings.push(binding);
