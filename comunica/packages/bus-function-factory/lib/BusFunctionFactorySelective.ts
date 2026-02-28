@@ -5,7 +5,7 @@ import type {
 } from '@comunica/bus-function-factory';
 import { BusFunctionFactory } from '@comunica/bus-function-factory';
 import type { IActorReply, IActorTest, IBusArgs } from '@comunica/core';
-import { ActionContextKey } from '@comunica/core';
+import { failTest, ActionContextKey } from '@comunica/core';
 
 export const functionFactoryDeactivateKey = new ActionContextKey<string[]>('@local/bus-function-factory:deactivate');
 
@@ -26,7 +26,16 @@ export class BusFunctionFactorySelective
     const actionId = this.getActionIdentifier(action);
     if (actionId && (action.context.get(functionFactoryDeactivateKey) ?? []).includes(actionId)) {
       // Mimic not supporting this operation
-      return [];
+      const actors = [ ...this.actorsIndex[actionId] || [], ...this.actorsIndex._undefined_ || [] ];
+      return actors.map((actor: ActorFunctionFactory): IActorReply<
+          ActorFunctionFactory,
+IActionFunctionFactory,
+IActorTest,
+IActorFunctionFactoryOutput
+> => ({
+        actor,
+        reply: Promise.resolve(failTest('')),
+      }));
     }
     return super.publish(action);
   }

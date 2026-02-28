@@ -19,6 +19,7 @@
     "@local/actor-query-parse-sparql": "link:comunica/packages/actor-query-parse-sparql",
     "@local/actor-function-factory-term-adjust": "link:comunica/packages/actor-function-factory-term-adjust",
     "@local/actor-query-operator-adjust": "link:comunica/packages/actor-query-operator-adjust",
+    "@local/bus-function-factory": "file:comunica/packages/bus-function-factory",
     "@local/query-sparql": "link:comunica/engines/query-sparql",
 
     "@eslint/compat": "^2.0.2",
