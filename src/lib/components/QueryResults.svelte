@@ -1,11 +1,29 @@
 <script lang="ts">
   import type {Bindings} from "@rdfjs/types";
+  import type { Term } from "@rdfjs/types";
 
   interface Props {
     bindings: Bindings[];
     queryDone: boolean;
   }
   let { bindings, queryDone }: Props = $props();
+
+  function termToString(term: Term): string {
+    switch (term.termType) {
+      case "BlankNode":
+        return term.value;
+      case "DefaultGraph":
+        return term.value;
+      case "Literal":
+        return term.value;
+      case "NamedNode":
+        return `<${term.value}>`;
+      case "Quad":
+        return `<<( ${[term.subject, term.predicate, term.object].map(termToString).join(" ")} )>>`;
+      default:
+        return term.value;
+    }
+  }
 </script>
 
 {#if bindings.length > 0 || queryDone}
@@ -20,7 +38,7 @@
           {#each [...binding] as [variable, term]}
             <div class="binding-row">
               <span class="var-badge">?{variable.value}</span>
-              <span class="term-value">{term.value}</span>
+              <span class="term-value">{termToString(term)}</span>
             </div>
           {/each}
         {/if}
