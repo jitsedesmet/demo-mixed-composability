@@ -80,7 +80,8 @@
           [toAlgebraKey.name]: buildToAlgebra(configs) as any,
           [lateralSupportKey.name]: engineComposition.has('Lateral operation'),
           [adjustSupportKey.name]: engineComposition.has('Built-in Adjust'),
-          [functionFactoryDeactivateKey.name]: ['langmatches'],
+          [functionFactoryDeactivateKey.name]: engineComposition.has('SPARQL 1.2') ?
+            [] : ['triple', 'subject', 'predicate', 'object', 'istriple'],
         });
         bindingStream.on('data', (binding: Bindings) => {
           bindings.push(binding);

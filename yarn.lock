@@ -3795,70 +3795,25 @@
     "@jridgewell/resolve-uri" "^3.1.0"
     "@jridgewell/sourcemap-codec" "^1.4.14"
 
-"@local/actor-function-factory-term-adjust@file:comunica/packages/actor-function-factory-term-adjust":
-  version "5.1.3"
-  dependencies:
-    "@comunica/bus-function-factory" "^5.1.3"
-    "@comunica/core" "^5.1.3"
-    "@comunica/utils-expression-evaluator" "^5.1.3"
-
 "@local/actor-function-factory-term-adjust@link:comunica/packages/actor-function-factory-term-adjust":
   version "0.0.0"
   uid ""
 
-"@local/actor-query-operation-lateral@file:comunica/packages/actor-query-operation-lateral":
-  version "5.1.3"
-  dependencies:
-    "@comunica/bus-query-operation" "^5.1.3"
-    "@comunica/bus-rdf-metadata-accumulate" "^5.1.3"
-    "@comunica/core" "^5.1.3"
-    "@comunica/types" "^5.1.3"
-    "@comunica/utils-algebra" "^5.1.3"
-    "@comunica/utils-metadata" "^5.1.3"
-    "@comunica/utils-query-operation" "^5.1.3"
-    asynciterator "^3.10.0"
+"@local/actor-query-operation-lateral@link:comunica/packages/actor-query-operation-lateral":
+  version "0.0.0"
+  uid ""
 
 "@local/actor-query-operator-adjust@link:comunica/packages/actor-query-operator-adjust":
   version "0.0.0"
   uid ""
 
-"@local/actor-query-parse-sparql@file:comunica/packages/actor-query-parse-sparql":
-  version "5.1.3"
-  dependencies:
-    "@comunica/bus-query-parse" "^5.1.3"
-    "@comunica/context-entries" "^5.1.3"
-    "@comunica/core" "^5.1.3"
-    "@comunica/types" "^5.1.3"
-    "@traqula/algebra-sparql-1-2" "^1.0.1"
-    "@traqula/parser-sparql-1-2" "^1.0.1"
-    "@traqula/rules-sparql-1-2" "^1.0.1"
-
 "@local/actor-query-parse-sparql@link:comunica/packages/actor-query-parse-sparql":
   version "0.0.0"
   uid ""
 
-"@local/bus-function-factory@file:comunica/packages/bus-function-factory":
-  version "5.1.3"
-  dependencies:
-    "@comunica/bus-function-factory" "^5.1.3"
-    "@comunica/context-entries" "^5.1.3"
-    "@comunica/core" "^5.1.3"
-    "@comunica/types" "^5.1.3"
-    "@comunica/utils-algebra" "^5.1.3"
-    "@comunica/utils-expression-evaluator" "^5.1.3"
-
 "@local/bus-function-factory@link:comunica/packages/bus-function-factory":
   version "0.0.0"
   uid ""
-
-"@local/config-query-sparql@file:comunica/engines/config-query-sparql":
-  version "5.0.0"
-  dependencies:
-    "@comunica/config-query-sparql" "~5.0.0"
-    "@local/actor-function-factory-term-adjust" "file:../../../.cache/yarn/v6/npm-@local-config-query-sparql-5.0.0-67796bfc-444a-48d3-862f-13717dc58bc7-1772316425347/node_modules/packages/actor-function-factory-term-adjust"
-    "@local/actor-query-operation-lateral" "file:../../../.cache/yarn/v6/npm-@local-config-query-sparql-5.0.0-67796bfc-444a-48d3-862f-13717dc58bc7-1772316425347/node_modules/packages/actor-query-operation-lateral"
-    "@local/actor-query-parse-sparql" "file:../../../.cache/yarn/v6/npm-@local-config-query-sparql-5.0.0-67796bfc-444a-48d3-862f-13717dc58bc7-1772316425347/node_modules/packages/actor-query-parse-sparql"
-    "@local/bus-function-factory" "file:../../../.cache/yarn/v6/npm-@local-config-query-sparql-5.0.0-67796bfc-444a-48d3-862f-13717dc58bc7-1772316425347/node_modules/packages/bus-function-factory"
 
 "@local/config-query-sparql@link:comunica/engines/config-query-sparql":
   version "0.0.0"

@@ -26,16 +26,13 @@ export class BusFunctionFactorySelective
     const actionId = this.getActionIdentifier(action);
     if (actionId && (action.context.get(functionFactoryDeactivateKey) ?? []).includes(actionId)) {
       // Mimic not supporting this operation
-      const actors = [ ...this.actorsIndex[actionId] || [], ...this.actorsIndex._undefined_ || [] ];
-      return actors.map((actor: ActorFunctionFactory): IActorReply<
-          ActorFunctionFactory,
-IActionFunctionFactory,
-IActorTest,
-IActorFunctionFactoryOutput
-> => ({
+      const failedLocally = (this.actorsIndex[actionId] || []).map(actor => ({
         actor,
         reply: Promise.resolve(failTest('')),
       }));
+      const executed = (this.actorsIndex._undefined_ || [])
+        .map(actor => ({ actor, reply: actor.test(action) }));
+      return [ ...failedLocally, ...executed ];
     }
     return super.publish(action);
   }
