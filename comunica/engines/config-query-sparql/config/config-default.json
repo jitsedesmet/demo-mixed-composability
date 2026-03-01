@@ -11,6 +11,7 @@
     "ccqs:config/expression-evaluator-factory/actors.json",
     "ccqs:config/expression-evaluator-factory/mediators.json",
     "lcqs:config/function-factory/actors.json",
+    "lcqs:config/function-factory/bus.json",
     "lcqs:config/function-factory/mediators.json",
     "ccqs:config/hash-bindings/actors.json",
     "ccqs:config/hash-bindings/mediators.json",

@@ -18,6 +18,7 @@
   import {parserKey, toAlgebraKey} from "@local/actor-query-parse-sparql";
   import {lateralSupportKey} from "@local/actor-query-operation-lateral";
   import {adjustSupportKey} from "@local/actor-function-factory-term-adjust";
+  import {functionFactoryDeactivateKey} from "@local/bus-function-factory";
 
   interface Props {
     query: string | undefined;
@@ -79,6 +80,8 @@
           [toAlgebraKey.name]: buildToAlgebra(configs) as any,
           [lateralSupportKey.name]: engineComposition.has('Lateral operation'),
           [adjustSupportKey.name]: engineComposition.has('Built-in Adjust'),
+          [functionFactoryDeactivateKey.name]: engineComposition.has('SPARQL 1.2') ?
+            [] : ['triple', 'subject', 'predicate', 'object', 'istriple'],
         });
         bindingStream.on('data', (binding: Bindings) => {
           bindings.push(binding);

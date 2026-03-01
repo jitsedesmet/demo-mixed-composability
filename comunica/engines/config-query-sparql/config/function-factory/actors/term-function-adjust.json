@@ -8,7 +8,10 @@
   "actors": [
     {
       "@id": "urn:comunica:default:function-factory/actors#term-function-adjust",
-      "@type": "ActorFunctionFactoryTermAdjust"
+      "@type": "ActorFunctionFactoryTermAdjust",
+      "bus": {
+        "@id": "urn:comunica:default:function-factory/bus#selective"
+      }
     }
   ]
 }

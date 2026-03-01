@@ -1,0 +1,7 @@
+{
+  "@context": [
+    "https://linkedsoftwaredependencies.org/bundles/npm/@local/bus-function-factory/^5.0.0/components/context.jsonld"
+  ],
+  "@id": "urn:comunica:default:function-factory/bus#selective",
+  "@type": "BusFunctionFactorySelective"
+}

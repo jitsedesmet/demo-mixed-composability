@@ -5,5 +5,5 @@
   ],
   "@id": "urn:comunica:default:function-factory/mediators#main",
   "@type": "MediatorRace",
-  "bus": { "@id": "ActorFunctionFactory:_default_bus" }
+  "bus": { "@id": "urn:comunica:default:function-factory/bus#selective" }
 }
