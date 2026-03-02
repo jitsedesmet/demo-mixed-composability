@@ -17,6 +17,7 @@
     getActiveConfigs,
   } from "$lib/traqula/buildTraqula";
   import { getActiveEngineDescriptions, generateConfigDefault } from "$lib/engine-config/buildEngineConfig";
+  import { defaultConfig } from "$lib/engine-config/default";
   import type { FileDescription } from "$lib/engine-config/engineConfTypes";
 
   // Parser composition toggles
@@ -59,30 +60,47 @@
 
   // Engine config
   let activeEngineDescriptions = $derived(getActiveEngineDescriptions(engineComposition));
-  let defaultConfigContent = $derived(generateConfigDefault(activeEngineDescriptions));
 
   let fetchedContents = $state<Map<string, string>>(new Map());
   const fetchingUrls = new Set<string>();
 
+  function fetchUrl(urlString: string): void {
+    if (!fetchedContents.has(urlString) && !fetchingUrls.has(urlString)) {
+      fetchingUrls.add(urlString);
+      fetch(urlString)
+        .then(r => r.text())
+        .then(text => {
+          fetchedContents = new Map(fetchedContents).set(urlString, text);
+        })
+        .catch(() => {
+          fetchedContents = new Map(fetchedContents).set(urlString, '// Failed to load content');
+        })
+        .finally(() => {
+          fetchingUrls.delete(urlString);
+        });
+    }
+  }
+
+  // Always fetch the base default config
+  $effect(() => {
+    fetchUrl((defaultConfig.body as URL).toString());
+  });
+
   $effect(() => {
     for (const desc of activeEngineDescriptions) {
       if (desc.body instanceof URL) {
-        const urlString = desc.body.toString();
-        if (!fetchedContents.has(urlString) && !fetchingUrls.has(urlString)) {
-          fetchingUrls.add(urlString);
-          fetch(urlString)
-            .then(r => r.text())
-            .then(text => {
-              fetchedContents = new Map(fetchedContents).set(urlString, text);
-            })
-            .catch(() => {
-              fetchedContents = new Map(fetchedContents).set(urlString, '// Failed to load content');
-            })
-            .finally(() => {
-              fetchingUrls.delete(urlString);
-            });
-        }
+        fetchUrl(desc.body.toString());
       }
+    }
+  });
+
+  let defaultConfigContent = $derived.by(() => {
+    const baseText = fetchedContents.get((defaultConfig.body as URL).toString());
+    if (baseText === undefined) return 'Loading base configuration...';
+    try {
+      return generateConfigDefault(activeEngineDescriptions, baseText);
+    } catch {
+      return baseText;
     }
   });
 
