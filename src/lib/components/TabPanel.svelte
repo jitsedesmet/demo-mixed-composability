@@ -70,6 +70,7 @@
     cursor: pointer;
     border-right: 1px solid #ccc;
     transition: background 0.15s;
+    white-space: nowrap;
   }
 
   .tab-bar button:last-child {
