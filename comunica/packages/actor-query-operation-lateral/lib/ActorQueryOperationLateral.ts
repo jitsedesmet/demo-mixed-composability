@@ -24,7 +24,7 @@ export type Lateral = {
   input: [Algebra.Operation, Algebra.Operation];
 };
 
-export const lateralSupportKey = new ActionContextKey<boolean>('@local/actor-query-operation-lateral:active');
+export const lateralDisableKey = new ActionContextKey<boolean>('@local/actor-query-operation-lateral:disable');
 
 /**
  * A comunica Union Query Operation Actor.
@@ -120,7 +120,7 @@ export class ActorQueryOperationLateral extends ActorQueryOperationTypedMediated
   }
 
   public override async test(action: IActionQueryOperation): Promise<TestResult<IActorTest>> {
-    if (!action.context.get(lateralSupportKey)) {
+    if (action.context.get(lateralDisableKey) ?? false) {
       return failTest('');
     }
     return super.test(action);

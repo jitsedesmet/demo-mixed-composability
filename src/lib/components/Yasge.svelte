@@ -16,8 +16,8 @@
   import {alterQuery} from "$lib/helpers.svelte";
   import {replaceState} from "$app/navigation";
   import {parserKey, toAlgebraKey} from "@local/actor-query-parse-sparql";
-  import {lateralSupportKey} from "@local/actor-query-operation-lateral";
-  import {adjustSupportKey} from "@local/actor-function-factory-term-adjust";
+  import {lateralDisableKey} from "@local/actor-query-operation-lateral";
+  import {adjustDisableKey} from "@local/actor-function-factory-term-adjust";
   import {functionFactoryDeactivateKey} from "@local/bus-function-factory";
 
   interface Props {
@@ -78,8 +78,8 @@
           toAst: buildToAst(configs) as any,
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
           [toAlgebraKey.name]: buildToAlgebra(configs) as any,
-          [lateralSupportKey.name]: engineComposition.has('Lateral operation'),
-          [adjustSupportKey.name]: engineComposition.has('Built-in Adjust'),
+          [lateralDisableKey.name]: !engineComposition.has('Lateral operation'),
+          [adjustDisableKey.name]: !engineComposition.has('Built-in Adjust'),
           [functionFactoryDeactivateKey.name]: engineComposition.has('SPARQL 1.2') ?
             [] : ['triple', 'subject', 'predicate', 'object', 'istriple'],
         });

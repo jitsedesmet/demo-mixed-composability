@@ -1,7 +1,7 @@
 {
   "name": "@local/config-query-sparql",
-  "private": "true",
   "version": "5.0.0",
+  "private": "true",
   "description": "default configuration files for Comunica SPARQL local",
   "lsd:module": true,
   "license": "MIT",
@@ -30,10 +30,10 @@
     "build:components": "componentsjs-generator"
   },
   "dependencies": {
-    "@local/actor-query-parse-sparql": "link:../../packages/actor-query-parse-sparql",
+    "@comunica/config-query-sparql": "~5.0.0",
     "@local/actor-function-factory-term-adjust": "link:../../packages/actor-function-factory-term-adjust",
     "@local/actor-query-operation-lateral": "link:../../packages/actor-query-operation-lateral",
-    "@local/bus-function-factory": "link:../../packages/bus-function-factory",
-    "@comunica/config-query-sparql": "~5.0.0"
+    "@local/actor-query-parse-sparql": "link:../../packages/actor-query-parse-sparql",
+    "@local/bus-function-factory": "link:../../packages/bus-function-factory"
   }
 }
