@@ -20,5 +20,21 @@ export function generateConfigDefault(activeDescriptions: FileDescriptions, base
   const newImports = activeDescriptions
     .filter(d => d.prefixForImport)
     .map(d => `${d.prefixForImport}/${d.name}`);
-  return JSON.stringify({ ...base, import: [...newImports, ...base.import] }, null, 2);
+
+  if (newImports.length === 0) {
+    return JSON.stringify(base, null, 2);
+  }
+
+  const json = JSON.stringify({ ...base, import: [...newImports, ...base.import] }, null, 2);
+
+  // Insert a blank line between the last new import and the first original import
+  const escapeRegExp = (s: string) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  const lastNewImportJson = escapeRegExp(JSON.stringify(newImports[newImports.length - 1]));
+  const firstBaseImportJson = base.import.length > 0 ? escapeRegExp(JSON.stringify(base.import[0])) : null;
+  if (!firstBaseImportJson) return json;
+
+  return json.replace(
+    new RegExp(`(${lastNewImportJson},)\n([ \\t]+${firstBaseImportJson})`),
+    '$1\n\n$2',
+  );
 }
