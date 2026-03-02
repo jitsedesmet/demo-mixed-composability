@@ -48,10 +48,14 @@
     return next;
   }
 
+  // Derive the name of the active example from the current query URL param
+  let activeExampleName = $derived(
+    exampleQueries.find(q => q.query === getQueryParam('query'))?.name ?? ''
+  );
+
   function loadExample(event: Event): void {
     const select = event.target as HTMLSelectElement;
     const example = exampleQueries.find(q => q.name === select.value);
-    select.value = '';
     if (!example) return;
 
     // Build a URL reflecting the example's required config
@@ -286,8 +290,8 @@ WHERE {
       <section class="query-section">
         <div class="query-title-row">
           <h2>Query</h2>
-          <select class="example-select" onchange={loadExample}>
-            <option value="" disabled selected>Load example…</option>
+          <select class="example-select" value={activeExampleName} onchange={loadExample}>
+            <option value="" disabled>Load example…</option>
             {#each exampleQueries as example}
               <option value={example.name}>{example.name}</option>
             {/each}
