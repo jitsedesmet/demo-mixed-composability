@@ -4,15 +4,16 @@
   interface Tab {
     id: string;
     label: string;
-    content: Snippet;
+    content?: Snippet;
   }
 
   interface Props {
     tabs: Tab[];
     activeTab?: string;
+    tabContent?: Snippet<[Tab]>;
   }
 
-  let { tabs, activeTab = $bindable(tabs[0]?.id ?? '') }: Props = $props();
+  let { tabs, activeTab = $bindable(tabs[0]?.id ?? ''), tabContent }: Props = $props();
 </script>
 
 <div class="tab-panel">
@@ -32,7 +33,11 @@
   <div class="tab-content">
     {#each tabs as tab}
       {#if activeTab === tab.id}
-        {@render tab.content()}
+        {#if tab.content}
+          {@render tab.content()}
+        {:else if tabContent}
+          {@render tabContent(tab)}
+        {/if}
       {/if}
     {/each}
   </div>
@@ -65,6 +70,7 @@
     cursor: pointer;
     border-right: 1px solid #ccc;
     transition: background 0.15s;
+    white-space: nowrap;
   }
 
   .tab-bar button:last-child {

@@ -16,6 +16,9 @@
     generateToAstCode,
     getActiveConfigs,
   } from "$lib/traqula/buildTraqula";
+  import { getActiveEngineDescriptions, generateConfigDefault } from "$lib/engine-config/buildEngineConfig";
+  import { defaultConfig } from "$lib/engine-config/default";
+  import type { FileDescription } from "$lib/engine-config/engineConfTypes";
 
   // Parser composition toggles
   const compositionOptions = ['SPARQL 1.2', 'Built-in Adjust', 'Lateral operation'];
@@ -53,7 +56,81 @@
   // Parser tabs
   let parserActiveTab = $state('lexer');
   // Engine tabs
-  let engineActiveTab = $state('config1');
+  let engineActiveTab = $state('config-default');
+
+  // Engine config
+  let activeEngineDescriptions = $derived(getActiveEngineDescriptions(engineComposition));
+
+  let fetchedContents = $state<Map<string, string>>(new Map());
+  const fetchingUrls = new Set<string>();
+
+  function fetchUrl(urlString: string): void {
+    if (!fetchedContents.has(urlString) && !fetchingUrls.has(urlString)) {
+      fetchingUrls.add(urlString);
+      fetch(urlString)
+        .then(r => r.text())
+        .then(text => {
+          fetchedContents = new Map(fetchedContents).set(urlString, text);
+        })
+        .catch(() => {
+          fetchedContents = new Map(fetchedContents).set(urlString, '// Failed to load content');
+        })
+        .finally(() => {
+          fetchingUrls.delete(urlString);
+        });
+    }
+  }
+
+  // Always fetch the base default config
+  $effect(() => {
+    fetchUrl((defaultConfig.body as URL).toString());
+  });
+
+  $effect(() => {
+    for (const desc of activeEngineDescriptions) {
+      if (desc.body instanceof URL) {
+        fetchUrl(desc.body.toString());
+      }
+    }
+  });
+
+  let defaultConfigContent = $derived.by(() => {
+    const baseText = fetchedContents.get((defaultConfig.body as URL).toString());
+    if (baseText === undefined) return 'Loading base configuration...';
+    try {
+      return generateConfigDefault(activeEngineDescriptions, baseText);
+    } catch {
+      return baseText;
+    }
+  });
+
+  function getDescContent(desc: FileDescription): string {
+    if (desc.body instanceof URL) {
+      return fetchedContents.get(desc.body.toString()) ?? 'Loading...';
+    }
+    return desc.body;
+  }
+
+  let engineTabs = $derived([
+    { id: 'config-default', label: 'config-default.json' },
+    ...activeEngineDescriptions.map(desc => ({
+      id: desc.name,
+      label: desc.name.split('/').at(-1) ?? desc.name,
+    })),
+  ]);
+
+  $effect(() => {
+    const tabIds = engineTabs.map(t => t.id);
+    if (!tabIds.includes(engineActiveTab)) {
+      engineActiveTab = 'config-default';
+    }
+  });
+
+  function getEngineTabContent(tab: { id: string }): string {
+    if (tab.id === 'config-default') return defaultConfigContent;
+    const desc = activeEngineDescriptions.find(d => d.name === tab.id);
+    return desc ? getDescContent(desc) : '';
+  }
 
   // Query & results
   let selectedSources = $state<string[]>(["https://fragments.dbpedia.org/2016-04/en"]);
@@ -154,22 +231,13 @@ WHERE {
         />
 
         <TabPanel
-          tabs={[
-            { id: 'config1', label: 'Config File 1', content: config1Content },
-            { id: 'config2', label: 'Config File 2', content: config2Content },
-            { id: 'config3', label: 'Config File 3', content: config3Content },
-          ]}
+          tabs={engineTabs}
           bind:activeTab={engineActiveTab}
+          {tabContent}
         />
 
-        {#snippet config1Content()}
-          <p class="placeholder">Components in file — <strong>{[...engineComposition].join(', ') || 'none'}</strong>.</p>
-        {/snippet}
-        {#snippet config2Content()}
-          <p class="placeholder">Config File 2 contents.</p>
-        {/snippet}
-        {#snippet config3Content()}
-          <p class="placeholder">Config File 3 contents.</p>
+        {#snippet tabContent(tab: { id: string })}
+          <CodeBlock code={getEngineTabContent(tab)} language="json" />
         {/snippet}
       </section>
     </div>
@@ -309,13 +377,6 @@ WHERE {
     font-size: 0.88em;
     color: #555;
     white-space: nowrap;
-  }
-
-  /* ---- Placeholder text ---- */
-  .placeholder {
-    color: #555;
-    font-size: 0.88em;
-    margin: 0;
   }
 
   /* ---- Footer ---- */
