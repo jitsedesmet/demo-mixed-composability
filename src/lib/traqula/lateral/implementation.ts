@@ -101,6 +101,9 @@ function addLateralBoundedVars(op: any, vars: Set<string>): void {
   } else if (op.patterns) {
     // Recurse into other pattern containers (group, union, optional, …)
     addLateralBoundedVars(op.patterns, vars);
+  } else if (op.where) {
+    // Handle SELECT query objects: the WHERE clause is in op.where, not op.patterns
+    addLateralBoundedVars(op.where, vars);
   }
 }
 
