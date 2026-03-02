@@ -17,6 +17,7 @@
   "devDependencies": {
     "@local/config-query-sparql": "link:comunica/engines/config-query-sparql",
     "@local/actor-query-parse-sparql": "link:comunica/packages/actor-query-parse-sparql",
+    "@local/actor-query-operation-lateral": "link:comunica/packages/actor-query-operation-lateral",
     "@local/actor-function-factory-term-adjust": "link:comunica/packages/actor-function-factory-term-adjust",
     "@local/actor-query-operator-adjust": "link:comunica/packages/actor-query-operator-adjust",
     "@local/bus-function-factory": "link:comunica/packages/bus-function-factory",
