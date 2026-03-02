@@ -8,6 +8,8 @@
   import type {Bindings} from "@rdfjs/types";
   import {alterQuery, getQueryParam, removeQuery} from "$lib/helpers.svelte";
   import {goto} from "$app/navigation";
+  import {page} from "$app/state";
+  import {exampleQueries} from "$lib/exampleQueries";
   import {
     generateGeneratorCode,
     generateLexerCode,
@@ -44,6 +46,43 @@
     const next = new Set(current);
     if (next.has(opt)) next.delete(opt); else next.add(opt);
     return next;
+  }
+
+  function loadExample(event: Event): void {
+    const select = event.target as HTMLSelectElement;
+    const example = exampleQueries.find(q => q.name === select.value);
+    select.value = '';
+    if (!example) return;
+
+    // Build a URL reflecting the example's required config
+    const url = new URL(page.url);
+    url.searchParams.set('query', example.query);
+    if (example.parserConfig !== undefined) {
+      if (example.parserConfig) {
+        url.searchParams.set('parserConfig', example.parserConfig);
+      } else {
+        url.searchParams.delete('parserConfig');
+      }
+    }
+    if (example.engineConfig !== undefined) {
+      if (example.engineConfig) {
+        url.searchParams.set('engineConfig', example.engineConfig);
+      } else {
+        url.searchParams.delete('engineConfig');
+      }
+    }
+
+    // Update local state so the editor and toggles react immediately
+    if (example.parserConfig !== undefined) {
+      parserComposition = parseButtonList(example.parserConfig);
+    }
+    if (example.engineConfig !== undefined) {
+      engineComposition = parseButtonList(example.engineConfig);
+    }
+    query = example.query;
+
+    // Push a new history entry (back button returns to previous query)
+    goto(url.toString(), { replaceState: false });
   }
 
   let parserConfigs = $derived(getActiveConfigs(parserComposition));
@@ -245,7 +284,15 @@ WHERE {
     <!-- ===== RIGHT PANEL ===== -->
     <div class="right-panel">
       <section class="query-section">
-        <h2>Query</h2>
+        <div class="query-title-row">
+          <h2>Query</h2>
+          <select class="example-select" onchange={loadExample}>
+            <option value="" disabled selected>Load example…</option>
+            {#each exampleQueries as example}
+              <option value={example.name}>{example.name}</option>
+            {/each}
+          </select>
+        </div>
         <span class="source-label">Choose datasources:</span>
         <SourceSelector bind:selected={selectedSources} />
         <Yasge bind:query bind:bindings bind:queryDone bind:queryRunning bind:queryStartTime {parserComposition} {engineComposition} sources={selectedSources} />
@@ -357,6 +404,28 @@ WHERE {
   .source-label {
     font-weight: 500;
     white-space: nowrap;
+  }
+
+  .query-title-row {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 0.4rem;
+  }
+
+  .query-title-row h2 {
+    margin: 0;
+    flex-shrink: 0;
+  }
+
+  .example-select {
+    font-size: 0.85em;
+    padding: 0.2rem 0.4rem;
+    border: 1px solid #d0d7de;
+    border-radius: 6px;
+    background: #fff;
+    cursor: pointer;
+    max-width: 18rem;
   }
 
   /* ---- Query / Results sections ---- */
