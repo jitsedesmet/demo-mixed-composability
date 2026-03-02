@@ -1,0 +1,22 @@
+import type {FileDescription} from "./engineConfTypes";
+
+export const adjustActor: FileDescription = {
+  name: "function-factory/actors/term-function-adjust.json",
+  body: `{
+  "@context": [
+    "https://linkedsoftwaredependencies.org/bundles/npm/@comunica/runner/^5.0.0/components/context.jsonld",
+    "https://linkedsoftwaredependencies.org/bundles/npm/@local/actor-function-factory-term-adjust/^5.0.0/components/context.jsonld"
+  ],
+  "@id": "urn:comunica:default:Runner",
+  "@type": "Runner",
+  "actors": [
+    {
+      "@id": "urn:comunica:default:function-factory/actors#term-function-adjust",
+      "@type": "ActorFunctionFactoryTermAdjust"
+    }
+  ]
+}`,
+  prefixForImport: "lcqs:config",
+}
+
+export const adjustDescriptions = [adjustActor];
