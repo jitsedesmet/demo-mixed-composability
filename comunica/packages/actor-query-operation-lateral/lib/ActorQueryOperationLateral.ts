@@ -15,8 +15,8 @@ import type {
 } from '@comunica/types';
 import type { Algebra } from '@comunica/utils-algebra';
 import { AlgebraFactory } from '@comunica/utils-algebra';
-import { MetadataValidationState } from '@comunica/utils-metadata';
 import { BindingsFactory } from '@comunica/utils-bindings-factory';
+import { MetadataValidationState } from '@comunica/utils-metadata';
 import { getSafeBindings, materializeOperation } from '@comunica/utils-query-operation';
 import type * as RDF from '@rdfjs/types';
 import { MultiTransformIterator, TransformIterator } from 'asynciterator';
@@ -155,7 +155,7 @@ export class ActorQueryOperationLateral extends ActorQueryOperationTypedMediated
           bindingsFactory,
         );
         return new TransformIterator<RDF.Bindings>(
-          async () => {
+          async() => {
             const rhsResult: IQueryOperationResultBindings = getSafeBindings(
               await this.mediatorQueryOperation.mediate({ operation: materializedRhs, context }),
             );
@@ -178,8 +178,8 @@ export class ActorQueryOperationLateral extends ActorQueryOperationTypedMediated
     ]).then(([ lhsMeta, rhsMeta ]: MetadataBindings[]) => {
       const cardinality = {
         type: (lhsMeta.cardinality.type === 'exact' && rhsMeta.cardinality.type === 'exact') ?
-          'exact' as const :
-          'estimate' as const,
+          <const> 'exact' :
+          <const> 'estimate',
         value: lhsMeta.cardinality.value * rhsMeta.cardinality.value,
       };
 
