@@ -2,6 +2,7 @@ import type {FullTraqulaConfig} from "$lib/traqula/types";
 import {
   accumulateGroupGraphPattern,
   graphPatternNotTriples,
+  inScopeVariablesWithLateral,
   lateral,
   lateralGraphPattern,
   translateAlgLateral,
@@ -38,7 +39,10 @@ export const configLateral: FullTraqulaConfig = {
   toAlgebra: {
     imports,
     toAdd: [],
-    toPatch: [{ rule: accumulateGroupGraphPattern, str: 'gramLat.accumulateGroupGraphPattern' }]
+    toPatch: [
+      { rule: accumulateGroupGraphPattern, str: 'gramLat.accumulateGroupGraphPattern' },
+      { rule: inScopeVariablesWithLateral, str: 'gramLat.inScopeVariablesWithLateral' },
+    ]
   },
   toAst: {
     imports,
