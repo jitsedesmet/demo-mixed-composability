@@ -186,7 +186,10 @@ WHERE {
   let queryDone = $state(false);
   let queryRunning = $state(false);
   let queryStartTime = $state(0);
+  let queryCancelled = $state(false);
   let elapsed = $state(0);
+  let yasgeRef: { cancelQuery: () => void } | undefined = $state();
+  let queryTimerSuffix = $derived(queryRunning ? '…' : queryCancelled ? ' (stopped)' : '');
 
   $effect(() => {
     if (!queryRunning) return;
@@ -292,17 +295,25 @@ WHERE {
         </div>
         <span class="source-label">Choose datasources:</span>
         <SourceSelector bind:selected={selectedSources} />
-        <Yasge bind:query bind:bindings bind:queryDone bind:queryRunning bind:queryStartTime {parserComposition} {engineComposition} sources={selectedSources} />
+        <Yasge bind:this={yasgeRef} bind:query bind:bindings bind:queryDone bind:queryRunning bind:queryStartTime bind:queryCancelled {parserComposition} {engineComposition} sources={selectedSources} />
+        {#if queryRunning}
+          <button class="stop-btn" onclick={() => yasgeRef?.cancelQuery()}>
+            <svg viewBox="0 0 10 10" height="0.8em" aria-hidden="true">
+              <rect x="1" y="1" width="8" height="8" />
+            </svg>
+            Stop
+          </button>
+        {/if}
       </section>
 
       <section class="results-section">
         <div class="results-header">
           <h2>Results</h2>
-          {#if queryRunning || queryDone}
-            <span class="query-timer">{bindings.length} result{bindings.length === 1 ? '' : 's'} in {elapsed.toFixed(1)}s{queryRunning ? '…' : ''}</span>
+          {#if queryRunning || queryDone || queryCancelled}
+            <span class="query-timer">{bindings.length} result{bindings.length === 1 ? '' : 's'} in {elapsed.toFixed(1)}s{queryTimerSuffix}</span>
           {/if}
         </div>
-        <QueryResults {bindings} {queryDone} />
+        <QueryResults {bindings} {queryDone} {queryCancelled} />
       </section>
     </div>
   </main>
@@ -449,6 +460,28 @@ WHERE {
     font-size: 0.88em;
     color: #555;
     white-space: nowrap;
+  }
+
+  .stop-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3em;
+    margin-top: 0.4rem;
+    padding: 0.3em 0.75em;
+    background: #c0392b;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    font-size: 0.88em;
+    cursor: pointer;
+  }
+
+  .stop-btn:hover {
+    background: #a93226;
+  }
+
+  .stop-btn svg rect {
+    fill: #fff;
   }
 
   /* ---- Footer ---- */

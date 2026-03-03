@@ -5,8 +5,9 @@
   interface Props {
     bindings: Bindings[];
     queryDone: boolean;
+    queryCancelled?: boolean;
   }
-  let { bindings, queryDone }: Props = $props();
+  let { bindings, queryDone, queryCancelled = false }: Props = $props();
 
   function termToString(term: Term): string {
     switch (term.termType) {
@@ -26,8 +27,11 @@
   }
 </script>
 
-{#if bindings.length > 0 || queryDone}
-  {#if bindings.length === 0}
+{#if bindings.length > 0 || queryDone || queryCancelled}
+  {#if queryCancelled}
+    <p class="stopped-notice">⚠ Query stopped — results may be incomplete.</p>
+  {/if}
+  {#if bindings.length === 0 && queryDone}
     <p class="no-results">Query returned no results.</p>
   {:else}
     {#each bindings as binding, i}
@@ -52,6 +56,16 @@
     color: #555;
     font-size: 0.88em;
     margin: 0;
+  }
+
+  .stopped-notice {
+    color: #7d3c0a;
+    background: #fdf3e3;
+    border: 1px solid #f0a500;
+    border-radius: 4px;
+    font-size: 0.85em;
+    padding: 0.3em 0.6em;
+    margin: 0 0 0.5rem 0;
   }
 
   .binding-card {

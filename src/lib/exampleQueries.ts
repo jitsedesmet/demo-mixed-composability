@@ -94,7 +94,8 @@ PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 
 SELECT *
 WHERE {
-  ?movie dbpedia-owl:starring [ rdfs:label "Brad Pitt"@en ];
+  ?movie a dbpedia-owl:Film ;
+         dbpedia-owl:starring [ rdfs:label "Brad Pitt"@en ];
          rdfs:label ?title;
          dbpedia-owl:director [ rdfs:label ?name ].
   FILTER LANGMATCHES(LANG(?title), "EN")
@@ -111,7 +112,8 @@ PREFIX dbpedia-owl: <http://dbpedia.org/ontology/>
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 
 SELECT * WHERE {
-  ?movie rdfs:label ?title ;
+  ?movie a dbpedia-owl:Film ;
+    rdfs:label ?title ;
          
   LATERAL {       
       ?movie  dbpedia-owl:starring ?actor1 , ?actor2 .

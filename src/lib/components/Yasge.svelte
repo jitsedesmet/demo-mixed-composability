@@ -26,6 +26,7 @@
     queryDone?: boolean;
     queryRunning?: boolean;
     queryStartTime?: number;
+    queryCancelled?: boolean;
     parserComposition?: Set<string>;
     engineComposition?: Set<string>;
     sources?: string[];
@@ -36,12 +37,23 @@
     queryDone = $bindable(false),
     queryRunning = $bindable(false),
     queryStartTime = $bindable(0),
+    queryCancelled = $bindable(false),
     parserComposition = $bindable(new Set<string>()),
     engineComposition = $bindable(new Set<string>()),
     sources = ["https://fragments.dbpedia.org/2016-04/en"],
   }: Props = $props();
   let error = $state<string | undefined>(undefined);
   const engine = new QueryEngine();
+  let abortController: AbortController | undefined;
+  let activeStream: { destroy: () => void } | undefined;
+
+  export function cancelQuery(): void {
+    if (!queryRunning) return;
+    abortController?.abort();
+    activeStream?.destroy();
+    queryRunning = false;
+    queryCancelled = true;
+  }
   interface YasgeContext {
     query: string | undefined;
   }
@@ -57,19 +69,31 @@
     if (startQuery !== undefined) yasqe.setValue(startQuery);
 
     yasqe.on('query', async () => {
+      // Free resources from any currently-running query before starting a new one
+      abortController?.abort();
+      activeStream?.destroy();
+      // Invalidate the HTTP/source cache so a re-run of the same query gets a fresh
+      // source instead of the stale/destroyed QuerySourceHypermedia that was cached
+      // by ActorOptimizeQueryOperationQuerySourceIdentify.
+      await engine.invalidateHttpCache();
+
       query = yasqe.getValue() as string;
       replaceState(alterQuery('query', query), {});
       error = undefined;
+      const thisAbortController = new AbortController();
+      abortController = thisAbortController;
       try {
         bindings = [];
         queryDone = false;
         queryRunning = true;
+        queryCancelled = false;
         queryStartTime = Date.now();
 
         const configs = getActiveConfigs(parserComposition);
         const lexer = buildLexer(configs);
         const bindingStream = await engine.queryBindings(query, {
           sources: sources,
+          httpAbortSignal: thisAbortController.signal,
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
           [parserKey.name]: buildParser(configs, lexer) as any,
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -83,22 +107,33 @@
           [functionFactoryDeactivateKey.name]: engineComposition.has('SPARQL 1.2') ?
             [] : ['triple', 'subject', 'predicate', 'object', 'istriple'],
         });
+        activeStream = bindingStream;
         bindingStream.on('data', (binding: Bindings) => {
+          if (thisAbortController.signal.aborted) return;
           bindings.push(binding);
         });
         bindingStream.on('error', (err: Error) => {
-          error = err.message;
-          queryRunning = false;
-          console.error(err);
+          if (!thisAbortController.signal.aborted) {
+            error = err.message;
+            console.error(err);
+            queryRunning = false;
+          }
         });
         bindingStream.on('end', () => {
-          queryDone = true;
-          queryRunning = false;
+          if (!thisAbortController.signal.aborted) {
+            queryDone = true;
+            queryRunning = false;
+          }
         })
       } catch (err: unknown) {
-        error = (err as Error).message;
-        queryRunning = false;
-        console.error(err);
+        const e = err as Error;
+        if (!thisAbortController.signal.aborted) {
+          error = e.message;
+          console.error(err);
+        }
+        if (abortController === thisAbortController) {
+          queryRunning = false;
+        }
       }
     });
 
