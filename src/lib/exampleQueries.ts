@@ -37,7 +37,7 @@ WHERE {
          dbpedia-owl:director [ rdfs:label ?name ].
   FILTER LANGMATCHES(LANG(?title), "EN")
   FILTER LANGMATCHES(LANG(?name),  "EN")
-  BIND( ADJUST ("2010-06-21Z"^^xsd:date, "-PT10H"^^xsd:dayTimeDuration) as ?adjustedDate) .
+  BIND( ADJUST ("2010-06-21T00:00:00Z"^^xsd:dateTime, "-PT10H"^^xsd:dayTimeDuration) as ?adjustedDate) .
 }`,
     parserConfig: 'Built-in Adjust',
     engineConfig: 'Built-in Adjust',
