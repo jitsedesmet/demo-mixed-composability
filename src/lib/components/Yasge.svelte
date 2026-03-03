@@ -45,9 +45,14 @@
   let error = $state<string | undefined>(undefined);
   const engine = new QueryEngine();
   let abortController: AbortController | undefined;
+  let activeStream: { destroy: () => void } | undefined;
 
   export function cancelQuery(): void {
+    if (!queryRunning) return;
     abortController?.abort();
+    activeStream?.destroy();
+    queryRunning = false;
+    queryCancelled = true;
   }
   interface YasgeContext {
     query: string | undefined;
@@ -93,27 +98,26 @@
           [functionFactoryDeactivateKey.name]: engineComposition.has('SPARQL 1.2') ?
             [] : ['triple', 'subject', 'predicate', 'object', 'istriple'],
         });
+        activeStream = bindingStream;
         bindingStream.on('data', (binding: Bindings) => {
           bindings.push(binding);
         });
         bindingStream.on('error', (err: Error) => {
-          if (err.name === 'AbortError' || abortController?.signal.aborted) {
-            queryCancelled = true;
-          } else {
+          if (!abortController?.signal.aborted) {
             error = err.message;
             console.error(err);
+            queryRunning = false;
           }
-          queryRunning = false;
         });
         bindingStream.on('end', () => {
-          queryDone = true;
-          queryRunning = false;
+          if (!abortController?.signal.aborted) {
+            queryDone = true;
+            queryRunning = false;
+          }
         })
       } catch (err: unknown) {
         const e = err as Error;
-        if (e.name === 'AbortError' || abortController?.signal.aborted) {
-          queryCancelled = true;
-        } else {
+        if (!abortController?.signal.aborted) {
           error = e.message;
           console.error(err);
         }
