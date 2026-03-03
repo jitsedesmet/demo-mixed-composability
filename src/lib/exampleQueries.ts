@@ -110,21 +110,15 @@ WHERE {
 PREFIX dbpedia-owl: <http://dbpedia.org/ontology/>
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 
-SELECT ?movie ?title ?actor1Name ?actor2Name ?annotated
-WHERE {
+SELECT * WHERE {
   ?movie rdfs:label ?title ;
-         dbpedia-owl:starring ?actor1 .
-  ?actor1 rdfs:label ?actor1Name .
-  FILTER LANGMATCHES(LANG(?title), "EN")
-  FILTER LANGMATCHES(LANG(?actor1Name), "EN")
-
-  LATERAL {
-    ?movie dbpedia-owl:starring ?actor2 .
-    ?actor2 rdfs:label ?actor2Name .
-    FILTER LANGMATCHES(LANG(?actor2Name), "EN")
-    FILTER (?actor1 != ?actor2)
-    BIND(TRIPLE(?actor1, ex:coStarredWith, ?actor2) AS ?annotated)
+         
+  LATERAL {       
+      ?movie  dbpedia-owl:starring ?actor1 , ?actor2 .
+      FILTER ( ?actor1 != ?actor2)
   }
+                          
+  BIND(TRIPLE(?actor1, ex:coStarredWith, ?actor2) AS ?annotated)
 } LIMIT 10`,
     parserConfig: 'SPARQL 1.2,Lateral operation',
     engineConfig: 'SPARQL 1.2,Lateral operation',
