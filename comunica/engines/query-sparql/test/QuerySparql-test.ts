@@ -1878,5 +1878,96 @@ WHERE {
         });
       });
     });
+
+    describe('lateral join with in-memory store', () => {
+      let store: Store;
+
+      beforeEach(() => {
+        store = new Store();
+        store.addQuad(DF.quad(
+          DF.namedNode('http://ex.org/s1'),
+          DF.namedNode('http://ex.org/p'),
+          DF.namedNode('http://ex.org/o1'),
+        ));
+        store.addQuad(DF.quad(
+          DF.namedNode('http://ex.org/s2'),
+          DF.namedNode('http://ex.org/p'),
+          DF.namedNode('http://ex.org/o2'),
+        ));
+        store.addQuad(DF.quad(
+          DF.namedNode('http://ex.org/s1'),
+          DF.namedNode('http://ex.org/label'),
+          DF.literal('Label for s1'),
+        ));
+        store.addQuad(DF.quad(
+          DF.namedNode('http://ex.org/s2'),
+          DF.namedNode('http://ex.org/label'),
+          DF.literal('Label for s2'),
+        ));
+      });
+
+      it('should perform a lateral join using algebra directly', async() => {
+        // Build a lateral algebra: LHS = (?s ?p ?o), RHS = (?s label ?label)
+        // For each (?s, ?p, ?o) from LHS, inject ?s into RHS and get ?label
+        const lhs = factory.createBgp([
+          factory.createPattern(
+            DF.variable('s'),
+            DF.namedNode('http://ex.org/p'),
+            DF.variable('o'),
+          ),
+        ]);
+        const rhs = factory.createBgp([
+          factory.createPattern(
+            DF.variable('s'),
+            DF.namedNode('http://ex.org/label'),
+            DF.variable('label'),
+          ),
+        ]);
+        const lateralOp: any = { type: 'lateral', input: [ lhs, rhs ]};
+        const queryOp = factory.createProject(lateralOp, [
+          DF.variable('s'),
+          DF.variable('o'),
+          DF.variable('label'),
+        ]);
+
+        const bindingsStream = await engine.queryBindings(queryOp, { sources: [ store ]});
+        const results = await arrayifyStream(bindingsStream);
+        expect(results).toHaveLength(2);
+        expect(results.some(b =>
+          b.get(DF.variable('s'))?.value === 'http://ex.org/s1' &&
+          b.get(DF.variable('label'))?.value === 'Label for s1',
+        )).toBeTruthy();
+        expect(results.some(b =>
+          b.get(DF.variable('s'))?.value === 'http://ex.org/s2' &&
+          b.get(DF.variable('label'))?.value === 'Label for s2',
+        )).toBeTruthy();
+      });
+
+      it('should return no results when RHS has no matches for a LHS binding', async() => {
+        // LHS = (?s ?p ?o), RHS = (?s <nonExistent> ?x) - no triples with <nonExistent>
+        const lhs = factory.createBgp([
+          factory.createPattern(
+            DF.variable('s'),
+            DF.namedNode('http://ex.org/p'),
+            DF.variable('o'),
+          ),
+        ]);
+        const rhs = factory.createBgp([
+          factory.createPattern(
+            DF.variable('s'),
+            DF.namedNode('http://ex.org/nonExistent'),
+            DF.variable('x'),
+          ),
+        ]);
+        const lateralOp: any = { type: 'lateral', input: [ lhs, rhs ]};
+        const queryOp = factory.createProject(lateralOp, [
+          DF.variable('s'),
+          DF.variable('x'),
+        ]);
+
+        const bindingsStream = await engine.queryBindings(queryOp, { sources: [ store ]});
+        await expect(arrayifyStream(bindingsStream)).resolves.toHaveLength(0);
+      });
+    });
   });
 });
