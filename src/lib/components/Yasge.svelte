@@ -72,6 +72,10 @@
       // Free resources from any currently-running query before starting a new one
       abortController?.abort();
       activeStream?.destroy();
+      // Invalidate the HTTP/source cache so a re-run of the same query gets a fresh
+      // source instead of the stale/destroyed QuerySourceHypermedia that was cached
+      // by ActorOptimizeQueryOperationQuerySourceIdentify.
+      await engine.invalidateHttpCache();
 
       query = yasqe.getValue() as string;
       replaceState(alterQuery('query', query), {});
