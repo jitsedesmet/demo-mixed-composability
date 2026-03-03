@@ -69,9 +69,15 @@
     if (startQuery !== undefined) yasqe.setValue(startQuery);
 
     yasqe.on('query', async () => {
+      // Free resources from any currently-running query before starting a new one
+      abortController?.abort();
+      activeStream?.destroy();
+
       query = yasqe.getValue() as string;
       replaceState(alterQuery('query', query), {});
       error = undefined;
+      const thisAbortController = new AbortController();
+      abortController = thisAbortController;
       try {
         bindings = [];
         queryDone = false;
@@ -79,12 +85,11 @@
         queryCancelled = false;
         queryStartTime = Date.now();
 
-        abortController = new AbortController();
         const configs = getActiveConfigs(parserComposition);
         const lexer = buildLexer(configs);
         const bindingStream = await engine.queryBindings(query, {
           sources: sources,
-          httpAbortSignal: abortController.signal,
+          httpAbortSignal: thisAbortController.signal,
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
           [parserKey.name]: buildParser(configs, lexer) as any,
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -100,28 +105,31 @@
         });
         activeStream = bindingStream;
         bindingStream.on('data', (binding: Bindings) => {
+          if (thisAbortController.signal.aborted) return;
           bindings.push(binding);
         });
         bindingStream.on('error', (err: Error) => {
-          if (!abortController?.signal.aborted) {
+          if (!thisAbortController.signal.aborted) {
             error = err.message;
             console.error(err);
             queryRunning = false;
           }
         });
         bindingStream.on('end', () => {
-          if (!abortController?.signal.aborted) {
+          if (!thisAbortController.signal.aborted) {
             queryDone = true;
             queryRunning = false;
           }
         })
       } catch (err: unknown) {
         const e = err as Error;
-        if (!abortController?.signal.aborted) {
+        if (!thisAbortController.signal.aborted) {
           error = e.message;
           console.error(err);
         }
-        queryRunning = false;
+        if (abortController === thisAbortController) {
+          queryRunning = false;
+        }
       }
     });
 
