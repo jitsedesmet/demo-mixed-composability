@@ -60,16 +60,12 @@
     margin-bottom: 0.5rem;
     overflow: hidden;
     background: #fff;
+    display: grid;
+    grid-template-columns: max-content 1fr;
   }
 
   .binding-row {
-    display: flex;
-    align-items: stretch;
-    border-bottom: 1px solid #e1e4e8;
-  }
-
-  .binding-row:last-child {
-    border-bottom: none;
+    display: contents;
   }
 
   .var-badge {
@@ -81,7 +77,12 @@
     min-width: 5.5rem;
     display: flex;
     align-items: center;
-    flex-shrink: 0;
+    border-bottom: 1px solid #e1e4e8;
+  }
+
+  .binding-row:last-child .var-badge,
+  .binding-row:last-child .term-value {
+    border-bottom: none;
   }
 
   .term-value {
@@ -89,9 +90,11 @@
     font-size: 0.88em;
     word-break: break-all;
     align-self: center;
+    border-bottom: 1px solid #e1e4e8;
   }
 
   .empty-binding {
+    grid-column: 1 / -1;
     display: block;
     padding: 6px 10px;
     color: #888;
