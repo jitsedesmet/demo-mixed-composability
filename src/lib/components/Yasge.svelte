@@ -26,6 +26,7 @@
     queryDone?: boolean;
     queryRunning?: boolean;
     queryStartTime?: number;
+    queryCancelled?: boolean;
     parserComposition?: Set<string>;
     engineComposition?: Set<string>;
     sources?: string[];
@@ -36,12 +37,18 @@
     queryDone = $bindable(false),
     queryRunning = $bindable(false),
     queryStartTime = $bindable(0),
+    queryCancelled = $bindable(false),
     parserComposition = $bindable(new Set<string>()),
     engineComposition = $bindable(new Set<string>()),
     sources = ["https://fragments.dbpedia.org/2016-04/en"],
   }: Props = $props();
   let error = $state<string | undefined>(undefined);
   const engine = new QueryEngine();
+  let abortController: AbortController | undefined;
+
+  export function cancelQuery(): void {
+    abortController?.abort();
+  }
   interface YasgeContext {
     query: string | undefined;
   }
@@ -64,12 +71,15 @@
         bindings = [];
         queryDone = false;
         queryRunning = true;
+        queryCancelled = false;
         queryStartTime = Date.now();
 
+        abortController = new AbortController();
         const configs = getActiveConfigs(parserComposition);
         const lexer = buildLexer(configs);
         const bindingStream = await engine.queryBindings(query, {
           sources: sources,
+          httpAbortSignal: abortController.signal,
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
           [parserKey.name]: buildParser(configs, lexer) as any,
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -87,18 +97,27 @@
           bindings.push(binding);
         });
         bindingStream.on('error', (err: Error) => {
-          error = err.message;
+          if (err.name === 'AbortError' || abortController?.signal.aborted) {
+            queryCancelled = true;
+          } else {
+            error = err.message;
+            console.error(err);
+          }
           queryRunning = false;
-          console.error(err);
         });
         bindingStream.on('end', () => {
           queryDone = true;
           queryRunning = false;
         })
       } catch (err: unknown) {
-        error = (err as Error).message;
+        const e = err as Error;
+        if (e.name === 'AbortError' || abortController?.signal.aborted) {
+          queryCancelled = true;
+        } else {
+          error = e.message;
+          console.error(err);
+        }
         queryRunning = false;
-        console.error(err);
       }
     });
 
