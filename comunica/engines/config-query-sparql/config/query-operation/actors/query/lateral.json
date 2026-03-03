@@ -9,8 +9,7 @@
     {
       "@id": "urn:comunica:default:query-operation/actors#lateral",
       "@type": "ActorQueryOperationLateral",
-      "mediatorQueryOperation": { "@id": "urn:comunica:default:query-operation/mediators#main" },
-      "mediatorRdfMetadataAccumulate": { "@id": "urn:comunica:default:rdf-metadata-accumulate/mediators#main" }
+      "mediatorQueryOperation": { "@id": "urn:comunica:default:query-operation/mediators#main" }
     }
   ]
 }

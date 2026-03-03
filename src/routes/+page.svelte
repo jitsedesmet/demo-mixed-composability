@@ -8,6 +8,7 @@
   import type {Bindings} from "@rdfjs/types";
   import {alterQuery, getQueryParam, removeQuery} from "$lib/helpers.svelte";
   import {goto} from "$app/navigation";
+  import {exampleQueries} from "$lib/exampleQueries";
   import {
     generateGeneratorCode,
     generateLexerCode,
@@ -44,6 +45,41 @@
     const next = new Set(current);
     if (next.has(opt)) next.delete(opt); else next.add(opt);
     return next;
+  }
+
+  // Derive the name of the active example from the current query URL param
+  let activeExampleName = $derived(
+    exampleQueries.find(q => q.query === getQueryParam('query'))?.name ?? ''
+  );
+
+  async function loadExample(event: Event): Promise<void> {
+    const select = event.target as HTMLSelectElement;
+    const example = exampleQueries.find(q => q.name === select.value);
+    if (!example) return;
+
+    // Update local state immediately for instant UI feedback
+    if (example.parserConfig !== undefined) parserComposition = parseButtonList(example.parserConfig);
+    if (example.engineConfig !== undefined) engineComposition = parseButtonList(example.engineConfig);
+    query = example.query;
+
+    // Build IRI using existing helper functions, chaining via replaceState so
+    // each helper reads the updated page.url before the next param is applied
+    if (example.parserConfig !== undefined) {
+      const list = [...parserComposition];
+      await goto(
+        list.length === 0 ? removeQuery('parserConfig') : alterQuery('parserConfig', list.join(',')),
+        { replaceState: true },
+      );
+    }
+    if (example.engineConfig !== undefined) {
+      const list = [...engineComposition];
+      await goto(
+        list.length === 0 ? removeQuery('engineConfig') : alterQuery('engineConfig', list.join(',')),
+        { replaceState: true },
+      );
+    }
+    // Final navigation creates a single history entry (back button works correctly)
+    await goto(alterQuery('query', example.query), { replaceState: false });
   }
 
   let parserConfigs = $derived(getActiveConfigs(parserComposition));
@@ -245,7 +281,15 @@ WHERE {
     <!-- ===== RIGHT PANEL ===== -->
     <div class="right-panel">
       <section class="query-section">
-        <h2>Query</h2>
+        <div class="query-title-row">
+          <h2>Query</h2>
+          <select class="example-select" value={activeExampleName} onchange={loadExample}>
+            <option value="" disabled>Load example…</option>
+            {#each exampleQueries as example}
+              <option value={example.name}>{example.name}</option>
+            {/each}
+          </select>
+        </div>
         <span class="source-label">Choose datasources:</span>
         <SourceSelector bind:selected={selectedSources} />
         <Yasge bind:query bind:bindings bind:queryDone bind:queryRunning bind:queryStartTime {parserComposition} {engineComposition} sources={selectedSources} />
@@ -357,6 +401,28 @@ WHERE {
   .source-label {
     font-weight: 500;
     white-space: nowrap;
+  }
+
+  .query-title-row {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 0.4rem;
+  }
+
+  .query-title-row h2 {
+    margin: 0;
+    flex-shrink: 0;
+  }
+
+  .example-select {
+    font-size: 0.85em;
+    padding: 0.2rem 0.4rem;
+    border: 1px solid #d0d7de;
+    border-radius: 6px;
+    background: #fff;
+    cursor: pointer;
+    max-width: 18rem;
   }
 
   /* ---- Query / Results sections ---- */
