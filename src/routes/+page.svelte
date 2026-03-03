@@ -8,7 +8,6 @@
   import type {Bindings} from "@rdfjs/types";
   import {alterQuery, getQueryParam, removeQuery} from "$lib/helpers.svelte";
   import {goto} from "$app/navigation";
-  import {page} from "$app/state";
   import {exampleQueries} from "$lib/exampleQueries";
   import {
     generateGeneratorCode,
@@ -53,40 +52,34 @@
     exampleQueries.find(q => q.query === getQueryParam('query'))?.name ?? ''
   );
 
-  function loadExample(event: Event): void {
+  async function loadExample(event: Event): Promise<void> {
     const select = event.target as HTMLSelectElement;
     const example = exampleQueries.find(q => q.name === select.value);
     if (!example) return;
 
-    // Build a URL reflecting the example's required config
-    const url = new URL(page.url);
-    url.searchParams.set('query', example.query);
-    if (example.parserConfig !== undefined) {
-      if (example.parserConfig) {
-        url.searchParams.set('parserConfig', example.parserConfig);
-      } else {
-        url.searchParams.delete('parserConfig');
-      }
-    }
-    if (example.engineConfig !== undefined) {
-      if (example.engineConfig) {
-        url.searchParams.set('engineConfig', example.engineConfig);
-      } else {
-        url.searchParams.delete('engineConfig');
-      }
-    }
-
-    // Update local state so the editor and toggles react immediately
-    if (example.parserConfig !== undefined) {
-      parserComposition = parseButtonList(example.parserConfig);
-    }
-    if (example.engineConfig !== undefined) {
-      engineComposition = parseButtonList(example.engineConfig);
-    }
+    // Update local state immediately for instant UI feedback
+    if (example.parserConfig !== undefined) parserComposition = parseButtonList(example.parserConfig);
+    if (example.engineConfig !== undefined) engineComposition = parseButtonList(example.engineConfig);
     query = example.query;
 
-    // Push a new history entry (back button returns to previous query)
-    goto(url.toString(), { replaceState: false });
+    // Build IRI using existing helper functions, chaining via replaceState so
+    // each helper reads the updated page.url before the next param is applied
+    if (example.parserConfig !== undefined) {
+      const list = [...parserComposition];
+      await goto(
+        list.length === 0 ? removeQuery('parserConfig') : alterQuery('parserConfig', list.join(',')),
+        { replaceState: true },
+      );
+    }
+    if (example.engineConfig !== undefined) {
+      const list = [...engineComposition];
+      await goto(
+        list.length === 0 ? removeQuery('engineConfig') : alterQuery('engineConfig', list.join(',')),
+        { replaceState: true },
+      );
+    }
+    // Final navigation creates a single history entry (back button works correctly)
+    goto(alterQuery('query', example.query), { replaceState: false });
   }
 
   let parserConfigs = $derived(getActiveConfigs(parserComposition));
