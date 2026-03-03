@@ -1,16 +1,14 @@
 import type { IActionQueryOperation, IActorQueryOperationTypedMediatedArgs } from '@comunica/bus-query-operation';
 import { ActorQueryOperationTypedMediated } from '@comunica/bus-query-operation';
-import type { MediatorRdfMetadataAccumulate } from '@comunica/bus-rdf-metadata-accumulate';
 import { KeysInitQuery } from '@comunica/context-entries';
 import type { IActorTest, TestResult } from '@comunica/core';
-import { failTest, ActionContextKey, passTestVoid } from '@comunica/core';
+import { ActionContextKey, failTest, passTestVoid } from '@comunica/core';
 import type {
   BindingsStream,
   IActionContext,
   IQueryOperationResult,
   IQueryOperationResultBindings,
   MetadataBindings,
-  MetadataQuads,
   MetadataVariable,
 } from '@comunica/types';
 import type { Algebra } from '@comunica/utils-algebra';
@@ -29,99 +27,15 @@ export type Lateral = {
 export const lateralDisableKey = new ActionContextKey<boolean>('@local/actor-query-operation-lateral:disable');
 
 /**
- * A comunica Union Query Operation Actor.
+ * A comunica lateral Query Operation Actor.
  */
 export class ActorQueryOperationLateral extends ActorQueryOperationTypedMediated<Lateral> {
-  public readonly mediatorRdfMetadataAccumulate: MediatorRdfMetadataAccumulate;
-
   public constructor(args: IActorQueryOperationLateralArgs) {
     super(args, 'lateral');
-    this.mediatorRdfMetadataAccumulate = args.mediatorRdfMetadataAccumulate;
-  }
-
-  /**
-   * Takes the union of the given double array variables.
-   * Uniqueness is guaranteed.
-   * @param {string[][]} variables Double array of variables to take the union of.
-   * @return {string[]} The union of the given variables.
-   */
-  public static unionVariables(variables: MetadataVariable[][]): MetadataVariable[] {
-    const variablesIndexed: Record<string, { variable: RDF.Variable; canBeUndef: boolean; occurrences: number }> = {};
-    for (const variablesA of variables) {
-      for (const variable of variablesA) {
-        if (!variablesIndexed[variable.variable.value]) {
-          variablesIndexed[variable.variable.value] = {
-            variable: variable.variable,
-            canBeUndef: variable.canBeUndef,
-            occurrences: 0,
-          };
-        }
-        const entry = variablesIndexed[variable.variable.value];
-        entry.canBeUndef = entry.canBeUndef || variable.canBeUndef;
-        entry.occurrences++;
-      }
-    }
-    return Object.values(variablesIndexed)
-      .map(entry => entry.occurrences === variables.length ?
-          { variable: entry.variable, canBeUndef: entry.canBeUndef } :
-          { variable: entry.variable, canBeUndef: true });
-  }
-
-  /**
-   * Takes the union of the given metadata array.
-   * It will ensure that the cardinality metadata value is properly calculated.
-   * @param {{[p: string]: any}[]} metadatas Array of metadata.
-   * @param bindings If the union of the variables field should also be taken.
-   * @param context The action context
-   * @param mediatorRdfMetadataAccumulate Mediator for metadata accumulation
-   * @return {{[p: string]: any}} Union of the metadata.
-   */
-  public static async unionMetadata<
-    Bindings extends boolean,
-    M extends (Bindings extends true ? MetadataBindings : MetadataQuads),
-  >(
-    metadatas: M[],
-    bindings: Bindings,
-    context: IActionContext,
-    mediatorRdfMetadataAccumulate: MediatorRdfMetadataAccumulate,
-    // eslint-disable-next-line function-paren-newline
-  ): Promise<M> {
-    let accumulatedMetadata: M = <M> (await mediatorRdfMetadataAccumulate
-      .mediate({ mode: 'initialize', context })).metadata;
-
-    // Accumulate cardinality
-    for (const appendingMetadata of metadatas) {
-      accumulatedMetadata = <any> {
-        ...appendingMetadata,
-        ...(await mediatorRdfMetadataAccumulate
-          .mediate({
-            mode: 'append',
-            accumulatedMetadata: <any> accumulatedMetadata,
-            appendingMetadata: <any> appendingMetadata,
-            context,
-          })).metadata,
-      };
-    }
-
-    // Create new metadata state
-    accumulatedMetadata.state = new MetadataValidationState();
-
-    // Propagate metadata invalidations
-    const invalidateListener = (): void => accumulatedMetadata.state.invalidate();
-    for (const metadata of metadatas) {
-      metadata.state.addInvalidateListener(invalidateListener);
-    }
-
-    // Union variables
-    if (bindings) {
-      const variables: MetadataVariable[][] = metadatas.map(metadata => metadata.variables);
-      accumulatedMetadata.variables = ActorQueryOperationLateral.unionVariables(variables);
-    }
-
-    return accumulatedMetadata;
   }
 
   public override async test(action: IActionQueryOperation): Promise<TestResult<IActorTest>> {
+    // Reject test if actor has been disabled
     if (action.context.get(lateralDisableKey) ?? false) {
       return failTest('');
     }
@@ -132,8 +46,7 @@ export class ActorQueryOperationLateral extends ActorQueryOperationTypedMediated
     return passTestVoid();
   }
 
-  public async runOperation(operation: Lateral, context: IActionContext):
-  Promise<IQueryOperationResult> {
+  public async runOperation(operation: Lateral, context: IActionContext): Promise<IQueryOperationResult> {
     // Evaluate the LHS to get a stream of bindings
     const leftResult: IQueryOperationResultBindings = getSafeBindings(
       await this.mediatorQueryOperation.mediate({ operation: operation.input[0], context }),
@@ -201,6 +114,4 @@ export class ActorQueryOperationLateral extends ActorQueryOperationTypedMediated
   }
 }
 
-export interface IActorQueryOperationLateralArgs extends IActorQueryOperationTypedMediatedArgs {
-  mediatorRdfMetadataAccumulate: MediatorRdfMetadataAccumulate;
-}
+export interface IActorQueryOperationLateralArgs extends IActorQueryOperationTypedMediatedArgs {}
