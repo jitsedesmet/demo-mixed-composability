@@ -79,7 +79,7 @@
       );
     }
     // Final navigation creates a single history entry (back button works correctly)
-    goto(alterQuery('query', example.query), { replaceState: false });
+    await goto(alterQuery('query', example.query), { replaceState: false });
   }
 
   let parserConfigs = $derived(getActiveConfigs(parserComposition));

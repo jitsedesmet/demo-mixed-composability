@@ -54,56 +54,34 @@ WHERE {
           rdfs:label ?name ;
           dbpedia-owl:birthDate ?birthDate .
   FILTER LANGMATCHES(LANG(?name), "EN")
-  BIND(ADJUST(?birthDate, "-PT5H"^^xsd:dayTimeDuration) AS ?birthDateShifted)
+  BIND(ADJUST( xsd:dateTime(?birthDate), "-PT5H"^^xsd:dayTimeDuration) AS ?birthDateShifted)
 } LIMIT 20`,
     parserConfig: 'Built-in Adjust',
     engineConfig: 'Built-in Adjust',
   },
   {
-    name: "LATERAL – movies starring Brad Pitt or Leonardo DiCaprio",
-    query: `PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
-PREFIX dbpedia-owl: <http://dbpedia.org/ontology/>
+    name: "LATERAL – movies starring Brad Pitt with a single label",
+    query: `PREFIX dbpedia-owl: <http://dbpedia.org/ontology/>
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 
-SELECT *
-WHERE {
+SELECT * WHERE {
   ?movie dbpedia-owl:starring [ rdfs:label "Brad Pitt"@en ];
-         rdfs:label ?title;
-         dbpedia-owl:director [ rdfs:label ?name ].
-  FILTER LANGMATCHES(LANG(?title), "EN")
-  FILTER LANGMATCHES(LANG(?name),  "EN")
-
-  LATERAL {
-    ?movie dbpedia-owl:starring [ rdfs:label "Leonardo DiCaprio"@en ];
-           rdfs:label ?title;
-           dbpedia-owl:director [ rdfs:label ?name ].
-    FILTER LANGMATCHES(LANG(?title), "EN")
-    FILTER LANGMATCHES(LANG(?name),  "EN")
-  }
+  LATERAL { SELECT * { ?movie rdfs:label ?title; } LIMIT 1 } .
+  LATERAL { SELECT * { ?movie dbpedia-owl:director [ rdfs:label ?name ]  } LIMIT 1 } .
 }`,
     parserConfig: 'Lateral operation',
     engineConfig: 'Lateral operation',
   },
   {
-    name: "LATERAL – directors who also starred in a film",
+    name: "LATERAL – movies staring Brad Pitt with single optional label",
     query: `PREFIX dbpedia-owl: <http://dbpedia.org/ontology/>
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 
-SELECT DISTINCT ?personName ?directedTitle ?starredTitle
-WHERE {
-  ?directedFilm dbpedia-owl:director ?person ;
-                rdfs:label ?directedTitle .
-  ?person rdfs:label ?personName .
-  FILTER LANGMATCHES(LANG(?personName), "EN")
-  FILTER LANGMATCHES(LANG(?directedTitle), "EN")
-
-  LATERAL {
-    ?starredFilm dbpedia-owl:starring ?person ;
-                 rdfs:label ?starredTitle .
-    FILTER LANGMATCHES(LANG(?starredTitle), "EN")
-    FILTER (?directedFilm != ?starredFilm)
-  }
-} LIMIT 20`,
+SELECT * WHERE {
+  ?movie dbpedia-owl:starring [ rdfs:label "Brad Pitt"@en ];
+  LATERAL { OPTIONAL { SELECT * { ?movie rdfs:label ?title; } LIMIT 1 } } .
+  LATERAL { OPTIONAL { SELECT * { ?movie dbpedia-owl:director [ rdfs:label ?name ]  } LIMIT 1 } } .
+}`,
     parserConfig: 'Lateral operation',
     engineConfig: 'Lateral operation',
   },
